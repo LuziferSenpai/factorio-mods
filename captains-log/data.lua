@@ -7,7 +7,9 @@ local icons = {
     "waiting-for-departure",
     "no-schedule",
     "waiting-at-station",
-    "pause"
+    "pause",
+    "sort-bottom-top",
+    "sort-top-bottom"
 }
 
 data:extend({
@@ -42,4 +44,11 @@ data.raw["gui-style"].default["captains_log_table"] = {
         position = { 472, 25 },
         size = 1
     }
+}
+
+data.raw["gui-style"].default["captains_log_bold_clickable_label"] = {
+    type = "label_style",
+    parent = "bold_label",
+    hovered_font_color = gui_color.light_orange,
+    clicked_font_color = gui_color.orange
 }

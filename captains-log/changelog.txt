@@ -1,17 +1,22 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.4
+Date: 07.11.2024
+  Changes:
+    - Added a way to reverse the display order of the entries.
+---------------------------------------------------------------------------------------------------
 Version: 0.0.3
 Date: 03.11.2024
   Changes:
-    - Added missing mod dependency
+    - Added missing mod dependency.
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.2
 Date: 01.11.2024
   Changes:
-    - It now shows a little symbole besides the platform name, that indicated the status of the platform
+    - It now shows a little symbole besides the platform name, that indicated the status of the platform.
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.1
 Date: 31.10.2024
   Features:
-    - Tracking of space platforms
-    - Tracks the journey, loading time & journey time
-    - Force support
+    - Tracking of space platforms.
+    - Tracks the journey, loading time & journey time.
+    - Force support.

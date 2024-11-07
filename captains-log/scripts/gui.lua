@@ -31,6 +31,15 @@ local function changeSelectedPlatform(event)
     logGui.buildLogGui(globalPlayer, storage.platforms[playerForceIndex][storage.platformsList[playerForceIndex][selectedIndex]].entries)
 end
 
+local function changeSortingDirection(event)
+    local globalPlayer = storage.players[tostring(event.player_index)]
+    local playerForceIndex = tostring(game.players[event.player_index].force_index)
+
+    globalPlayer.reverserSortingDirection = not globalPlayer.reverserSortingDirection
+
+    logGui.buildLogGui(globalPlayer, storage.platforms[playerForceIndex][storage.platformsList[playerForceIndex][globalPlayer.selectedIndex]].entries)
+end
+
 function logGui.buildGuiButton(globalPlayer, player)
     local logGuiButton = globalPlayer.guis.logGuiButton
 
@@ -64,7 +73,7 @@ function logGui.buildMainGui(globalPlayer, player)
                 {
                     type = "label",
                     style = "frame_title",
-                    caption = {"captains-log.captainsLog"},
+                    caption = { "captains-log.captainsLog" },
                     ignored_by_interaction = true
                 },
                 {
@@ -119,12 +128,13 @@ end
 
 function logGui.buildLogGui(globalPlayer, platformLogEntries)
     local logGuiLogScrollPane = globalPlayer.guis.logGuiLogScrollPane
+    local reverserSortingDirection = globalPlayer.reverserSortingDirection
     local leadingZerosNeeded = math.floor(math.log10(#platformLogEntries)) + 1
     local captions = {
         "#",
-        {"captains-log.journey"},
-        {"captains-log.loadingTime"},
-        {"captains-log.journeyTime"}
+        { "captains-log.journey" },
+        { "captains-log.loadingTime" },
+        { "captains-log.journeyTime" }
     }
 
     if logGuiLogScrollPane and logGuiLogScrollPane.valid then
@@ -140,12 +150,20 @@ function logGui.buildLogGui(globalPlayer, platformLogEntries)
     }
 
     for _, caption in pairs(captions) do
-        table.insert(logTable, {
+        local captionElement = {
             type = "label",
             caption = caption,
             style = "bold_label",
             style_mods = { bottom_margin = 6 }
-        })
+        }
+
+        if caption == "#" then
+            captionElement.caption = captionElement.caption .. "[img=" .. (reverserSortingDirection and "sort-bottom-top" or "sort-top-bottom") .. "-icon]"
+            captionElement.style = "captains_log_bold_clickable_label"
+            captionElement.handler = { [eventsDefine.on_gui_click] = changeSortingDirection }
+        end
+
+        table.insert(logTable, captionElement)
     end
 
     table.insert(logTable, {
@@ -153,35 +171,69 @@ function logGui.buildLogGui(globalPlayer, platformLogEntries)
         style = "flib_horizontal_pusher"
     })
 
-    for index, entry in pairs(platformLogEntries) do
-        local planetString = entry.leavePlanet and "[img=space-location." .. entry.leavePlanet .. "]" or "-"
-        local loadingTime = entry.leaveTick - entry.startWaitingTick
-        local journeyTime = entry.arriveTick - entry.leaveTick
+    if reverserSortingDirection then
+        for i = #platformLogEntries, 1, -1 do
+            local entry = platformLogEntries[i]
+            local planetString = entry.leavePlanet and "[img=space-location." .. entry.leavePlanet .. "]" or "-"
+            local loadingTime = entry.leaveTick - entry.startWaitingTick
+            local journeyTime = entry.arriveTick - entry.leaveTick
 
-        if entry.arrivePlanet then
-            planetString = planetString .. " → [img=space-location." .. entry.arrivePlanet .. "]"
+            if entry.arrivePlanet then
+                planetString = planetString .. " → [img=space-location." .. entry.arrivePlanet .. "]"
+            end
+
+            table.insert(logTable, {
+                type = "label",
+                caption = string.format("%0" .. leadingZerosNeeded .. "d", i)
+            })
+            table.insert(logTable, {
+                type = "label",
+                caption = planetString
+            })
+            table.insert(logTable, {
+                type = "label",
+                caption = loadingTime > 0 and tostring(flibFormat.time(loadingTime, true)) or "-"
+            })
+            table.insert(logTable, {
+                type = "label",
+                caption = journeyTime > 0 and tostring(flibFormat.time(journeyTime, true)) or "-"
+            })
+            table.insert(logTable, {
+                type = "empty-widget",
+                style = "flib_horizontal_pusher"
+            })
         end
+    else
+        for index, entry in pairs(platformLogEntries) do
+            local planetString = entry.leavePlanet and "[img=space-location." .. entry.leavePlanet .. "]" or "-"
+            local loadingTime = entry.leaveTick - entry.startWaitingTick
+            local journeyTime = entry.arriveTick - entry.leaveTick
 
-        table.insert(logTable, {
-            type = "label",
-            caption = string.format("%0" .. leadingZerosNeeded .. "d", index)
-        })
-        table.insert(logTable, {
-            type = "label",
-            caption = planetString
-        })
-        table.insert(logTable, {
-            type = "label",
-            caption = loadingTime > 0 and tostring(flibFormat.time(loadingTime, true)) or "-"
-        })
-        table.insert(logTable, {
-            type = "label",
-            caption = journeyTime > 0 and tostring(flibFormat.time(journeyTime, true)) or "-"
-        })
-        table.insert(logTable, {
-            type = "empty-widget",
-            style = "flib_horizontal_pusher"
-        })
+            if entry.arrivePlanet then
+                planetString = planetString .. " → [img=space-location." .. entry.arrivePlanet .. "]"
+            end
+
+            table.insert(logTable, {
+                type = "label",
+                caption = string.format("%0" .. leadingZerosNeeded .. "d", index)
+            })
+            table.insert(logTable, {
+                type = "label",
+                caption = planetString
+            })
+            table.insert(logTable, {
+                type = "label",
+                caption = loadingTime > 0 and tostring(flibFormat.time(loadingTime, true)) or "-"
+            })
+            table.insert(logTable, {
+                type = "label",
+                caption = journeyTime > 0 and tostring(flibFormat.time(journeyTime, true)) or "-"
+            })
+            table.insert(logTable, {
+                type = "empty-widget",
+                style = "flib_horizontal_pusher"
+            })
+        end
     end
 
     local elems = flibGui.add(logGuiLogScrollPane, logTable)
@@ -193,7 +245,8 @@ end
 
 flibGui.add_handlers({
     toggleMainGui = toggleMainGui,
-    changeSelectedPlatform = changeSelectedPlatform
+    changeSelectedPlatform = changeSelectedPlatform,
+    changeSortingDirection = changeSortingDirection
 })
 
 return logGui
