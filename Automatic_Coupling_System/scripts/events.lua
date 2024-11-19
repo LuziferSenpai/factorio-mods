@@ -17,8 +17,6 @@ local function checkCircuitNetworkHasSignal(entity, signalId)
 
     if greenCircuitNetwork then
         if greenCircuitNetwork.get_signal(signalId) ~= 0 then
-            game.print("greenNetwork has signal")
-
             return true
         end
     end
@@ -55,8 +53,7 @@ local function getCircuitNetworkSingalValue(entity, signalId)
 end
 
 local function matchEntityOrientation(entityAOrientation, entityBOrientation)
-    return math.abs(entityAOrientation - entityBOrientation) < 0.25 or
-        math.abs(entityAOrientation - entityBOrientation) > 0.75
+    return math.abs(entityAOrientation - entityBOrientation) < 0.25 or math.abs(entityAOrientation - entityBOrientation) > 0.75
 end
 
 local function getOrienationBetweenTwoPositions(entityAPosition, entityBPosition)
