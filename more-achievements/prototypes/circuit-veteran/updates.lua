@@ -19,7 +19,7 @@ for i = 1, 3 do
                 shift = { 0, 26 }
             }
         }),
-        quality = "normal",
+        item_product = { name = "advanced-circuit", quality = "normal" },
         localised_name = meld.overwrite({
             "",
             "[img=quality/normal]",
@@ -49,7 +49,7 @@ for i = 4, tiers do
             scale = 0.1875,
             shift = { 0, 26 }
         }}),
-        quality = "normal",
+        item_product = { name = "advanced-circuit", quality = "normal" },
         localised_name = meld.overwrite({
             "",
             "[img=quality/normal]",

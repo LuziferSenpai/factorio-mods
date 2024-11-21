@@ -32,23 +32,22 @@ for i = 1, tiers do
                 "",
                 "[img=quality/" .. qualities[j] .. "]",
                 " ",
-                {"more-achievements.iron-throne"},
+                { "more-achievements.iron-throne" },
                 " " .. i
             },
             localised_description = {
                 "",
-                {"more-achievements.produce"},
+                { "more-achievements.produce" },
                 number,
                 " ",
                 "[img=quality/" .. qualities[j] .. "]",
                 " ",
-                {"item-name.iron-plate"},
-                {"more-achievements.per-hour"}
+                { "item-name.iron-plate" },
+                { "more-achievements.per-hour" }
             },
             order = "d[production]-e[iron-throne-" .. i .. "]-" .. string.char(97 + j) .. "[quality]",
-            item_product = "iron-plate",
+            item_product = { name = "iron-plate", quality = qualities[j] },
             amount = amount,
-            quality = qualities[j],
             limited_to_one_game = false
         }
 

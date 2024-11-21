@@ -18,22 +18,22 @@ for i = 1, 3 do
                 shift = { 0, 26 }
             }
         }),
-        quality = "normal",
+        item_product = meld.overwrite({ name = "electronic-circuit", quality = "normal" }),
         localised_name = meld.overwrite({
             "",
             "[img=quality/normal]",
             " ",
-            {"more-achievements.mass-production"},
+            { "more-achievements.mass-production" },
             " " .. i
         }),
         localised_description = meld.overwrite({
             "",
-            {"more-achievements.produce"},
+            { "more-achievements.produce" },
             numbers[i],
             " ",
             "[img=quality/normal]",
             " ",
-            {"item-name.electronic-circuit"},
+            { "item-name.electronic-circuit" },
             "."
         }),
         order = "d[production]-b[electronic-circuit-production]-" .. string.char(96 + i) .. "-a[quality]"
@@ -42,28 +42,28 @@ end
 
 for i = 4, 9 do
     meld(data.raw["produce-achievement"]["mass-production-" .. i], {
-        icons = meld.append({{
+        icons = meld.append({ {
             icon = base .. "/graphics/icons/quality-normal.png",
             icon_size = 64,
             scale = 0.1875,
             shift = { 0, 26 }
-        }}),
-        quality = "normal",
+        } }),
+        item_product = meld.overwrite({ name = "electronic-circuit", quality = "normal" }),
         localised_name = meld.overwrite({
             "",
             "[img=quality/normal]",
-            " ",    
-            {"more-achievements.mass-production"},
+            " ",
+            { "more-achievements.mass-production" },
             " " .. i
         }),
         localised_description = meld.overwrite({
             "",
-            {"more-achievements.produce"},
+            { "more-achievements.produce" },
             numbers[i],
             " ",
             "[img=quality/normal]",
             " ",
-            {"item-name.electronic-circuit"},
+            { "item-name.electronic-circuit" },
             "."
         }),
         order = "d[production]-b[electronic-circuit-production]-" .. string.char(96 + i) .. "-a[quality]"

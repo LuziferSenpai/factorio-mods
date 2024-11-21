@@ -32,23 +32,22 @@ for i = 1, tiers do
                 "",
                 "[img=quality/" .. qualities[j] .. "]",
                 " ",
-                {"more-achievements.computer-age"},
+                { "more-achievements.computer-age" },
                 " " .. i
             },
             localised_description = {
                 "",
-                {"more-achievements.produce"},
+                { "more-achievements.produce" },
                 number,
                 " ",
                 "[img=quality/" .. qualities[j] .. "]",
                 " ",
-                {"item-name.processing-unit"},
-                {"more-achievements.per-hour"}
+                { "item-name.processing-unit" },
+                { "more-achievements.per-hour" }
             },
             order = "d[production]-d[processing-unit-production]-" .. string.char(96 + i) .. "-" .. string.char(97 + j) .. "[quality]",
-            item_product = "advanced-circuit",
+            item_product = { name = "advanced-circuit", quality = qualities[j] },
             amount = amount,
-            quality = qualities[j],
             limited_to_one_game = false
         }
 

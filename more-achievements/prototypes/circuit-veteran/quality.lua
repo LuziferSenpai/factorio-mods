@@ -46,9 +46,8 @@ for i = 1, tiers do
                 {"more-achievements.per-hour"}
             },
             order = "d[production]-c[advanced-circuit-production]-" .. string.char(96 + i) .. "-" .. string.char(97 + j) .. "[quality]",
-            item_product = "advanced-circuit",
+            item_product = { name = "advanced-circuit", quality = qualities[j] },
             amount = amount,
-            quality = qualities[j],
             limited_to_one_game = false
         }
 

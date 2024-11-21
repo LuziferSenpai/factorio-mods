@@ -18,7 +18,7 @@ for i = 1, 3 do
                 shift = { 0, 26 }
             }
         }),
-        quality = "normal",
+        item_product = { name = "processing-unit", quality = "normal" },
         localised_name = meld.overwrite({
             "",
             "[img=quality/normal]",
@@ -42,13 +42,13 @@ end
 
 for i = 4, 9 do
     meld(data.raw["produce-per-hour-achievement"]["computer-age-" .. i], {
-        icons = meld.append({{
+        icons = meld.append({ {
             icon = base .. "/graphics/icons/quality-normal.png",
             icon_size = 64,
             scale = 0.1875,
             shift = { 0, 26 }
-        }}),
-        quality = "normal",
+        } }),
+        item_product = { name = "processing-unit", quality = "normal" },
         localised_name = meld.overwrite({
             "",
             "[img=quality/normal]",

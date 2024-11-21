@@ -48,9 +48,8 @@ for i = 1, tiers do
                     "."
                 },
                 order = "a[progress]-h[crafting-tier-3-module]-" .. string.char(96 + j) .. "[" .. module .. "]-" .. string.char(96 + i) .. "-" .. string.char(96 + k) .. "[quality]",
-                item_product = module .. "-module-3",
+                item_product = { name = module .. "-module-3", quality = qualities[j] },
                 amount = amount,
-                quality = qualities[j],
                 limited_to_one_game = false
             }
 

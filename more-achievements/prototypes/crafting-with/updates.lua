@@ -22,7 +22,7 @@ for i = 1, #modules do
                 shift = { -10, 10 }
             }
         }),
-        quality = "normal",
+        item_product = { name = module .. "-module-3", quality = "normal" },
         localised_name = meld.overwrite({
             "",
             "[img=quality/normal]",
@@ -42,13 +42,13 @@ for i = 1, #modules do
 
     for j = 2, tiers do
         meld(data.raw["produce-achievement"]["crafting-with-" .. module .. "-" .. j], {
-            icons = meld.append({{
+            icons = meld.append({ {
                 icon = base .. "/graphics/icons/quality-normal.png",
                 icon_size = 64,
                 scale = 0.1875,
                 shift = { -10, 10 }
-            }}),
-            quality = "normal",
+            } }),
+            item_product = { name = module .. "-module-3", quality = "normal" },
             localised_name = meld.overwrite({
                 "",
                 "[img=quality/normal]",
@@ -68,6 +68,5 @@ for i = 1, #modules do
             }),
             order = "a[progress]-h[crafting-tier-3-module]-" .. string.char(96 + i) .. "[" .. module .. "]-" .. string.char(96 + j) .. "-a[quality]"
         })
-
     end
 end
