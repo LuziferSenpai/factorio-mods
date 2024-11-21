@@ -7,7 +7,7 @@ data:extend({
         icon = modName .. "/graphics/molten-tungsten.png",
         order = "b[new-fluid]-b[vulcanus]-c[molten-tungsten]",
         base_color = { 70, 58, 72 },
-        flow_color = { 222, 214, 231 },
+        flow_color = { 91, 70, 90 },
     }),
     meld(table.deepcopy(data.raw.recipe["tungsten-plate"]), {
         name = "molten-tungsten",
