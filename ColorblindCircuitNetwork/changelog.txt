@@ -1,8 +1,23 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.3.0
+Date: 21.11.2024
+  Changes:
+    - Updated the network selector labels to yellow & blue color & names
+---------------------------------------------------------------------------------------------------
+Version: 1.2.1
+Date: 19.11.2024
+  Features:
+    - Darkened copper wire slightly
+---------------------------------------------------------------------------------------------------
 Version: 1.2.0
 Date: 19.11.2024
   Changes:
-    - Updated to network selector's to yellow & blue color & names
+    - Updated original yellow to use the brighter version on electric pole gui
+    - Increased brightness of blue network id color
+  Features:
+    - Toggle tooltips in combinators says yellow/blue networks
+    - Tooltip for undo/redo dialog says yellow/blue wire
+    - Background colors in combinator inputs section are yellow/blue
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.0
 Date: 15.11.2024
