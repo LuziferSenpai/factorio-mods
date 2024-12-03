@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.8
+Date: 03.12.2024
+  Changes:
+    - Localisation should now be better for items with a localised_name
+  Features:
+    - Added a setting to hide new casting recipes from player crafting (#8)
+---------------------------------------------------------------------------------------------------
 Version: 0.0.7
 Date: 21.11.2024
   Changes:
