@@ -1,0 +1,11 @@
+{
+    "name": "more-pipe-to-ground",
+    "version": "0.0.1",
+    "title": "More Pipe To Ground",
+    "author": "LuziferSenpai",
+    "contact": "",
+    "homepage": "",
+    "description": "Adds 10 more pipe to ground variants, they connect to the vanilla pipe to ground!",
+    "dependencies": ["base"],
+    "factorio_version": "2.0"
+}

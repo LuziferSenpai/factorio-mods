@@ -33,6 +33,10 @@
       "enabled": true
     },
     {
+      "name": "color-coded-pipes",
+      "enabled": true
+    },
+    {
       "name": "ColorblindCircuitNetwork",
       "enabled": true
     },
@@ -85,6 +89,10 @@
       "enabled": true
     },
     {
+      "name": "no-pipe-touching",
+      "enabled": true
+    },
+    {
       "name": "RateCalculator",
       "enabled": true
     },
@@ -95,6 +103,14 @@
     {
       "name": "StatsGui",
       "enabled": true
+    },
+    {
+      "name": "coverage",
+      "enabled": false
+    },
+    {
+      "name": "profiler",
+      "enabled": false
     }
   ]
 }
