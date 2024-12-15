@@ -139,6 +139,10 @@ function logGui.buildLogGui(globalPlayer, platformLogEntries)
 
     if logGuiLogScrollPane and logGuiLogScrollPane.valid then
         logGuiLogScrollPane.clear()
+    else
+        globalPlayer.guis.logGuiMain.destroy()
+
+        return
     end
 
     local logTable = {
