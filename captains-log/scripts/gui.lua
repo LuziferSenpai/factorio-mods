@@ -19,6 +19,24 @@ local function toggleMainGui(event)
     else
         logGui.buildMainGui(globalPlayer, game.players[event.player_index])
     end
+
+    if settings.get_player_settings(event.player_index)["captains-log-show-platform-on-toggle"].value then
+        local player = game.players[event.player_index]
+        local surface = player.surface
+
+        if surface and surface.platform then
+            local platformIndexString = tostring(surface.platform.index)
+            local platformsList = storage.platformsList[tostring(player.force_index)]
+
+            for i = 1, #platformsList do
+                if platformsList[i] == platformIndexString then
+                    globalPlayer.guis.logGuiPlatformListBox.selected_index = i
+
+                    break
+                end
+            end
+        end
+    end
 end
 
 local function changeSelectedPlatform(event)

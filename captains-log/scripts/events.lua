@@ -27,6 +27,10 @@ local function initPlayer(player)
         if #storage.platformsList[forceIndexString] > 0 then
             logGui.buildGuiButton(storage.players[playerIndexString], player)
         end
+    else
+        if storage.players[playerIndexString].guis.logGuiMain then
+            storage.players[playerIndexString].guis.logGuiMain.destroy()
+        end
     end
 end
 
