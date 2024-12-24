@@ -6,6 +6,7 @@ local tungstenSteelTechnology = data.raw.technology["tungsten-steel"]
 local defaultIconSizeDefine = defines.default_icon_size
 local moreCastingActive = mods["more-casting"]
 local hideRecipes = settings.startup["molten-tungsten-hide-recipes"].value
+local originalTech = settings.startup["molten-tungsten-original-tech"].value
 local itemRaws = {
     "item",
     "item-with-entity-data",
@@ -203,10 +204,29 @@ local function createRecipe(item)
                 })
             })
 
+            if originalTech then
+                for _, technology in pairs(data.raw.technology) do
+                    if technology.effects and table_size(technology.effects) > 0 then
+                        for _, effect in pairs(technology.effects) do
+                            if effect.type == "unlock-recipe" and effect.recipe == item.name then
+                                table.insert(technology.effects, {
+                                    type = "unlock-recipe",
+                                    recipe = "casting-tungsten-" .. item.name
+                                })
+
+                                goto endOfIf
+                            end
+                        end
+                    end
+                end
+            end
+
             table.insert(tungstenSteelTechnology.effects, {
                 type = "unlock-recipe",
                 recipe = "casting-tungsten-" .. item.name
             })
+
+            ::endOfIf::
         end
     end
 end

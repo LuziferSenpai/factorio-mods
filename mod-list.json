@@ -1,133 +1,105 @@
-
 {
-  "mods": 
-  [
-    
+  "mods": [
     {
       "name": "base",
       "enabled": true
     },
-    
     {
       "name": "elevated-rails",
       "enabled": true
     },
-    
     {
       "name": "quality",
       "enabled": true
     },
-    
     {
       "name": "space-age",
       "enabled": true
     },
-    
     {
       "name": "atomic_pickaxe",
       "enabled": true
     },
-    
     {
       "name": "Automatic_Coupling_System",
       "enabled": true
     },
-    
     {
       "name": "bigger-enemies",
       "enabled": true
     },
-    
     {
       "name": "captains-log",
       "enabled": true
     },
-    
     {
       "name": "color-coded-pipes",
       "enabled": true
     },
-    
     {
       "name": "ColorblindCircuitNetwork",
       "enabled": true
     },
-    
     {
       "name": "CursorEnhancements",
       "enabled": true
     },
-    
     {
       "name": "debugadapter",
       "enabled": false
     },
-    
     {
       "name": "EditorExtensions",
       "enabled": true
     },
-    
     {
       "name": "Electronic_Locomotives",
       "enabled": true
     },
-    
     {
       "name": "factoryplanner",
       "enabled": true
     },
-    
     {
       "name": "flib",
       "enabled": true
     },
-    
     {
       "name": "global-power-network",
       "enabled": true
     },
-    
     {
       "name": "lane-balancers",
       "enabled": true
     },
-    
     {
       "name": "molten-tungsten",
       "enabled": true
     },
-    
     {
       "name": "more-achievements",
       "enabled": true
     },
-    
     {
       "name": "more-casting",
       "enabled": true
     },
-    
     {
       "name": "more-pipe-to-ground",
       "enabled": true
     },
-    
     {
       "name": "no-pipe-touching",
       "enabled": true
     },
-    
     {
       "name": "RateCalculator",
       "enabled": true
     },
-    
     {
       "name": "research-complete",
       "enabled": true
     },
-    
     {
       "name": "StatsGui",
       "enabled": true

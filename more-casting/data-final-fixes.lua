@@ -6,6 +6,7 @@ local recipes = data.raw.recipe
 local foundryTechnology = data.raw.technology["foundry"]
 local defaultIconSizeDefine = defines.default_icon_size
 local hideRecipes = settings.startup["more-casting-hide-recipes"].value
+local originalTech = settings.startup["more-casting-original-tech"].value
 local banList = {
     ["pipe"] = true,
     ["pipe-to-ground"] = true,
@@ -232,10 +233,29 @@ local function createRecipe(item)
                     })
                 })
 
+                if originalTech then
+                    for _, technology in pairs(data.raw.technology) do
+                        if technology.effects and table_size(technology.effects) > 0 then
+                            for _, effect in pairs(technology.effects) do
+                                if effect.type == "unlock-recipe" and effect.recipe == item.name then
+                                    table.insert(technology.effects, {
+                                        type = "unlock-recipe",
+                                        recipe = "casting-" .. item.name
+                                    })
+
+                                    goto endOfIf
+                                end
+                            end
+                        end
+                    end
+                end
+
                 table.insert(foundryTechnology.effects, {
                     type = "unlock-recipe",
                     recipe = "casting-" .. item.name
                 })
+
+                ::endOfIf::
             end
         end
     end
