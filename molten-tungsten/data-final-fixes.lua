@@ -202,11 +202,23 @@ local function createRecipe(item)
                     hide_from_player_crafting = hideRecipes
                 })
             })
-
-            table.insert(tungstenSteelTechnology.effects, {
-                type = "unlock-recipe",
-                recipe = "casting-tungsten-" .. item.name
-            })
+				
+			-- find intitator technologies from this point
+			for key, tech in pairs(data.raw['technology']) do
+				if tech['effects'] then -- techs with no effect should be skipped
+					for i = 1, #tech['effects'] do
+						if tech['effects'][i]['type'] == "unlock-recipe" then
+							-- is this the *right* recipe?
+							if tech['effects'][i]['recipe'] == item.name then
+								table.insert(tech['effects'], {
+									type = "unlock-recipe",
+									recipe = "casting-tungsten-" .. item.name
+								})
+							end
+						end
+					end
+				end
+			end
         end
     end
 end
