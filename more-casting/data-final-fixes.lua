@@ -90,7 +90,8 @@ end
 local function makeCastingIcons(item, fluids)
     local icons = {
         {
-            icon = modName .. "/graphics/64x64-empty.png"
+            icon = modName .. "/graphics/64x64-empty.png",
+            icon_size = 64
         }
     }
 

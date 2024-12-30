@@ -65,7 +65,8 @@ end
 local function makeCastingIcons(item, tungstenAmount, otherFluid)
     local icons = {
         {
-            icon = modName .. "/graphics/64x64-empty.png"
+            icon = modName .. "/graphics/64x64-empty.png",
+            icon_size = 64
         }
     }
 
