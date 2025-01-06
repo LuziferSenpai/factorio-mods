@@ -1,5 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.2
+Date: 06.01.2025
+  Features:
+    - Fixed dependencies to use quality instead of space-age
+---------------------------------------------------------------------------------------------------
 Version: 0.0.1
-Date: 18.10.2024
+Date: 06.01.2025
   Features:
     - Enables quality on cargo and fluid wagon
