@@ -1,11 +1,11 @@
 {
     "name": "quality-wagon",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "title": "Quality Wagon",
     "author": "LuziferSenpai",
     "contact": "",
     "homepage": "",
-    "description": "Quick mod to enable quality on cargo and fluid wagon.",
+    "description": "Quick mod to enable quality on ALL cargo and fluid wagons.",
     "dependencies": [
         "base >= 2.0.29",
         "quality"

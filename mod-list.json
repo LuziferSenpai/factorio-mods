@@ -49,6 +49,10 @@
       "enabled": false
     },
     {
+      "name": "DoubleWagons",
+      "enabled": true
+    },
+    {
       "name": "EditorExtensions",
       "enabled": true
     },
@@ -70,6 +74,10 @@
     },
     {
       "name": "lane-balancers",
+      "enabled": true
+    },
+    {
+      "name": "Mini_Trains",
       "enabled": true
     },
     {
