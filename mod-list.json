@@ -93,6 +93,10 @@
       "enabled": true
     },
     {
+      "name": "quality-wagons",
+      "enabled": true
+    },
+    {
       "name": "RateCalculator",
       "enabled": true
     },

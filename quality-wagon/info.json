@@ -1,0 +1,15 @@
+{
+    "name": "quality-wagon",
+    "version": "0.0.1",
+    "title": "Quality Wagon",
+    "author": "LuziferSenpai",
+    "contact": "",
+    "homepage": "",
+    "description": "Quick mod to enable quality on cargo and fluid wagon.",
+    "dependencies": [
+        "base >= 2.0.29",
+        "space-age"
+    ],
+    "space_travel_required": true,
+    "factorio_version": "2.0"
+}
