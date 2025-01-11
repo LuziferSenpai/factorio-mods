@@ -96,8 +96,6 @@ local function makeCastingIcons(item, tungstenAmount, otherFluid)
     end
 
     if otherFluid and otherFluid.amount > 0 then
-        log(serpent.block(otherFluid))
-
         local first = tungstenAmount >= otherFluid.amount
         local graphics = {
             copper = spaceAge .. "/graphics/icons/fluid/molten-copper.png",
@@ -108,7 +106,7 @@ local function makeCastingIcons(item, tungstenAmount, otherFluid)
         icons[#icons + 1] = {
             icon = graphics[first and otherFluid.name or "tungsten"],
             icon_size = 64,
-            scale = (0.5 * defines.default_icon_size / 64) * 0.59375,
+            scale = (0.5 * defaultIconSizeDefine / 64) * 0.59375,
             shift = { 10 / 2, -1 / 2 },
             draw_background = true
         }
@@ -116,7 +114,7 @@ local function makeCastingIcons(item, tungstenAmount, otherFluid)
         icons[#icons + 1] = {
             icon = graphics[first and "tungsten" or otherFluid.name],
             icon_size = 64,
-            scale = (0.5 * defines.default_icon_size / 64) * 0.65625,
+            scale = (0.5 * defaultIconSizeDefine / 64) * 0.65625,
             shift = { 27 / 2, -1 / 2 },
             draw_background = true
         }
@@ -124,7 +122,7 @@ local function makeCastingIcons(item, tungstenAmount, otherFluid)
         icons[#icons + 1] = {
             icon = modName .. "/graphics/molten-tungsten.png",
             icon_size = 64,
-            scale = (0.5 * defines.default_icon_size / 64) * 0.8125,
+            scale = (0.5 * defaultIconSizeDefine / 64) * 0.8125,
             shift = { 19 / 2, -2 / 2 },
             draw_background = true
         }
