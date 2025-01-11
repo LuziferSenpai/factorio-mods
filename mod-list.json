@@ -17,6 +17,14 @@
       "enabled": true
     },
     {
+      "name": "aai-loaders",
+      "enabled": true
+    },
+    {
+      "name": "aai-loaders-sane",
+      "enabled": true
+    },
+    {
       "name": "atomic_pickaxe",
       "enabled": true
     },
@@ -46,7 +54,8 @@
     },
     {
       "name": "debugadapter",
-      "enabled": false
+      "enabled": true,
+      "version": "2.0.5"
     },
     {
       "name": "DoubleWagons",
@@ -115,6 +124,14 @@
     {
       "name": "StatsGui",
       "enabled": true
+    },
+    {
+      "name": "coverage",
+      "enabled": false
+    },
+    {
+      "name": "profiler",
+      "enabled": false
     }
   ]
 }

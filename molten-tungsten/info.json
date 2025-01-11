@@ -1,6 +1,6 @@
 {
     "name": "molten-tungsten",
-    "version": "0.0.11",
+    "version": "0.0.12",
     "title": "Molten Tungsten",
     "author": "LuziferSenpai",
     "contact": "",
@@ -9,7 +9,8 @@
     "dependencies": [
         "base",
         "space-age",
-        "? more-casting"
+        "? more-casting",
+        "(?) aai-loaders-sane"
     ],
     "space_travel_required": true,
     "factorio_version": "2.0"
