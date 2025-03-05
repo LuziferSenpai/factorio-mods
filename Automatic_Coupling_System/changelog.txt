@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.1.0
+Date: 05.03.2025
+  Bugfixes:
+    - Fixed issues with interrupts
+    - Fixed potential consistency issues
+  Changes:
+    - Reworked the code to use the new LuaSchedule
+    - Changed the signal sprites to new 64x64 icons
+---------------------------------------------------------------------------------------------------
 Version: 3.0.0
 Date: 11.10.2024
   Changes:

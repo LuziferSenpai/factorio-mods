@@ -1,11 +1,13 @@
 {
     "name": "Automatic_Coupling_System",
-    "version": "3.0.0",
+    "version": "3.1.0",
     "title": "Automatic Coupling System",
     "author": "LuziferSenpai",
     "contact": "",
     "homepage": "",
     "description": "A way to couple & decouple trains at stations, via the circuit network.",
-    "dependencies": ["base"],
+    "dependencies": [
+        "base >= 2.0.39"
+    ],
     "factorio_version": "2.0"
 }

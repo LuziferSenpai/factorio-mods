@@ -12,7 +12,6 @@ data:extend(
             type = "virtual-signal",
             name = "signal-couple",
             icon = MODNAME .. "/images/coupleSignal.png",
-            icon_size = 32,
             subgroup = "coupling-signals",
             order = "a"
         },
@@ -20,7 +19,6 @@ data:extend(
             type = "virtual-signal",
             name = "signal-decouple",
             icon = MODNAME .. "/images/decoupleSignal.png",
-            icon_size = 32,
             subgroup = "coupling-signals",
             order = "b"
         },
