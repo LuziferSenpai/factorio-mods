@@ -187,7 +187,7 @@ local function doTrainCoupleLogic(train)
         local scheduleRecords = trainSchedule.get_records()
         local scheduleInterrupts = trainSchedule.get_interrupts()
         local scheduleCurrent = trainSchedule.current
-        local didOnlyCouple = false
+        local didDecouple = false
 
         trainSchedule.set_stopped(true)
         trainSchedule.clear_records()
@@ -195,7 +195,6 @@ local function doTrainCoupleLogic(train)
         trainSchedule.group = ""
 
         if attemptCoupleTrain(stationEntity, trainFrontEntity) then
-            didOnlyCouple = true
             train = trainFrontEntity.train
 
             if train then
@@ -248,11 +247,11 @@ local function doTrainCoupleLogic(train)
                     end
                 end
 
-                didOnlyCouple = false
+                didDecouple = true
             end
         end
 
-        if didOnlyCouple then
+        if not didDecouple then
             if trainGroup and #trainGroup > 0 then trainSchedule.group = trainGroup end
             if scheduleRecords and #scheduleRecords > 0 then trainSchedule.set_records(scheduleRecords) end
             if scheduleInterrupts and #scheduleInterrupts > 0 then trainSchedule.set_interrupts(scheduleInterrupts) end
