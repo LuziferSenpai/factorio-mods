@@ -1,0 +1,14 @@
+{
+    "name": "tasktorio",
+    "version": "0.0.2",
+    "title": "Tasktorio",
+    "author": "LuziferSenpai",
+    "contact": "",
+    "homepage": "",
+    "description": "Bring Kanban to Factorio with Tasktorio! Organize, prioritize, and track your factory goals using a sleek in-game board. From brainstorming to completion, visualize your progress and keep your production lines efficient!",
+    "dependencies": [
+        "base",
+        "flib >= 0.16.0"
+    ],
+    "factorio_version": "2.0"
+}
