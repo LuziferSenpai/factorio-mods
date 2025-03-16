@@ -1,9 +1,11 @@
+---@type flib_gui
 local flibGui = require("__flib__/gui")
 local taskGui = require("__tasktorio__/scripts/gui/task")
 local lib = require("__tasktorio__/scripts/gui/lib")
 local eventsDefine = defines.events
 local listGui = {}
 
+---@param event EventData.on_gui_click
 local function showListNameTextField(event)
     local element = event.element
 
@@ -12,53 +14,66 @@ local function showListNameTextField(event)
     element.parent.children[2].focus()
 end
 
+---@param event EventData.on_gui_confirmed
 local function changeListName(event)
     local element = event.element
     local listFlowElement = element.parent
-    local listElement = listFlowElement.parent
 
-    element.visible = false
+    if listFlowElement then
+        local listElement = listFlowElement.parent
 
-    listFlowElement.children[1].visible = true
-    listFlowElement.children[1].caption = element.text
+        if not listElement then return end
 
-    storage.forceData[listElement.tags.forceIndexString].lists[listElement.get_index_in_parent()].name = element.text
+        element.visible = false
+
+        listFlowElement.children[1].visible = true
+        listFlowElement.children[1].caption = element.text
+
+        storage.forceData[listElement.tags.forceIndexString].lists[listElement.get_index_in_parent()].name = element.text
+    end
 end
 
+---@param event EventData.on_gui_click
 local function moveListElement(event)
     local element = event.element
     local listElement = element.parent.parent
-    local listFlowElement = listElement.parent
-    local forceListData = storage.forceData[listElement.tags.forceIndexString].lists
-    local currentListId = listElement.get_index_in_parent()
-    local isBackwards = element.sprite == "flib_nav_backward_white"
-    local newListId = currentListId + (isBackwards and -1 or 2)
 
-    if event.control then
-        newListId = isBackwards and 1 or #forceListData + 1
-    elseif event.shift then
-        newListId = currentListId + (isBackwards and -5 or 6)
-    end
+    if listElement then
+        local listFlowElement = listElement.parent
+        local forceListData = storage.forceData[listElement.tags.forceIndexString].lists
+        local currentListId = listElement.get_index_in_parent()
+        local isBackwards = element.sprite == "flib_nav_backward_white"
+        local newListId = currentListId + (isBackwards and -1 or 2)
 
-    newListId = math.max(1, math.min(newListId, #forceListData + 1))
+        if event.control then
+            newListId = isBackwards and 1 or #forceListData + 1
+        elseif event.shift then
+            newListId = currentListId + (isBackwards and -5 or 6)
+        end
 
-    local currentListEntry = table.remove(forceListData, currentListId)
+        newListId = math.max(1, math.min(newListId, #forceListData + 1))
 
-    table.insert(forceListData, newListId - 1, currentListEntry)
+        local currentListEntry = table.remove(forceListData, currentListId)
 
-    lib.moveChildren(listFlowElement, currentListId, newListId)
+        table.insert(forceListData, newListId - 1, currentListEntry)
 
-    for _, childElement in pairs(listFlowElement.children) do
-        if childElement.tags and childElement.tags.forceIndexString then
-            local indexInParent = childElement.get_index_in_parent()
-            local childFlowElement = childElement.children[1]
+        lib.moveChildren(listFlowElement, currentListId, newListId)
 
-            childFlowElement.children[4].enabled = indexInParent ~= 1
-            childFlowElement.children[5].enabled = indexInParent ~= #forceListData
+        if not listFlowElement then return end
+
+        for _, childElement in pairs(listFlowElement.children) do
+            if childElement.tags and childElement.tags.forceIndexString then
+                local indexInParent = childElement.get_index_in_parent()
+                local childFlowElement = childElement.children[1]
+
+                childFlowElement.children[4].enabled = indexInParent ~= 1
+                childFlowElement.children[5].enabled = indexInParent ~= #forceListData
+            end
         end
     end
 end
 
+---@param event EventData.on_gui_click
 local function showAddTask(event)
     local element = event.element
     local addTaskElement = element.parent.children[#element.parent.children]
@@ -69,48 +84,59 @@ local function showAddTask(event)
     addTaskElement.children[1].children[1].text = ""
 end
 
+---@param event EventData.on_gui_click | EventData.on_gui_confirmed
 local function addTask(event)
     local textfieldElement = event.name == eventsDefine.on_gui_click and event.element.parent.parent.children[1] or event.element
 
     if #textfieldElement.text > 0 then
         local taskFlowElement = textfieldElement.parent.parent.parent
         local globalPlayer = storage.players[tostring(event.player_index)]
-        local tasks = storage.forceData[globalPlayer.forceIndexString].lists[taskFlowElement.parent.parent.parent.get_index_in_parent()].tasks
-        local allTasks = storage.allTasks
 
-        table.insert(allTasks, {
-            title = textfieldElement.text,
-            description = ""
-        })
-        table.insert(tasks, #allTasks)
+        if taskFlowElement then
+            local tasks = storage.forceData[globalPlayer.forceIndexString].lists[taskFlowElement.parent.parent.parent.get_index_in_parent()].tasks
+            local allTasks = storage.allTasks
 
-        taskGui.buildTaskGui(globalPlayer, taskFlowElement, allTasks[#allTasks], #tasks, #tasks, #allTasks)
+            table.insert(allTasks, {
+                title = textfieldElement.text,
+                description = ""
+            })
+            table.insert(tasks, #allTasks)
 
-        lib.moveChildren(taskFlowElement, #taskFlowElement.children, #taskFlowElement.children - 2)
+            taskGui.buildTaskGui(globalPlayer, taskFlowElement, allTasks[#allTasks], #tasks, #tasks, #allTasks)
 
-        taskFlowElement.children[#taskFlowElement.children].visible = false
-        taskFlowElement.children[#taskFlowElement.children - 1].visible = true
-        taskFlowElement.parent.scroll_to_bottom()
+            lib.moveChildren(taskFlowElement, #taskFlowElement.children, #taskFlowElement.children - 2)
 
-        for _, childElement in pairs(taskFlowElement.children) do
-            if childElement.tags and childElement.tags.forceIndexString then
-                local indexInParent = childElement.get_index_in_parent()
-                local childFlowElement = childElement.children[1].children[4]
+            taskFlowElement.children[#taskFlowElement.children].visible = false
+            taskFlowElement.children[#taskFlowElement.children - 1].visible = true
+            taskFlowElement.parent.scroll_to_bottom()
 
-                childFlowElement.children[1].enabled = indexInParent ~= 1
-                childFlowElement.children[2].enabled = indexInParent ~= #tasks
+            for _, childElement in pairs(taskFlowElement.children) do
+                if childElement.tags and childElement.tags.forceIndexString then
+                    local indexInParent = childElement.get_index_in_parent()
+                    local childFlowElement = childElement.children[1].children[4]
+
+                    childFlowElement.children[1].enabled = indexInParent ~= 1
+                    childFlowElement.children[2].enabled = indexInParent ~= #tasks
+                end
             end
         end
     end
 end
 
+---@param event EventData.on_gui_click
 local function hideAddTask(event)
     local addTaskElement = event.element.parent.parent.parent
+
+    if not addTaskElement then return end
 
     addTaskElement.visible = false
     addTaskElement.parent.children[addTaskElement.get_index_in_parent() - 1].visible = true
 end
 
+---@param globalPlayer GlobalPlayer
+---@param listData ListEntry[]
+---@param listEntry number
+---@param totalEntries number
 function listGui.buildListGui(globalPlayer, listData, listEntry, totalEntries)
     local kanbanGuiListFlow = globalPlayer.guis.kanbanGuiListFlow
 
@@ -123,10 +149,12 @@ function listGui.buildListGui(globalPlayer, listData, listEntry, totalEntries)
             style = "tasktorio_list_frame",
             direction = "vertical",
             tags = { forceIndexString = globalPlayer.forceIndexString },
+            ---@diagnostic disable-next-line: missing-fields
             style_mods = { width = 325 / playerDisplayScale },
             {
                 type = "flow",
                 direction = "horizontal",
+                ---@diagnostic disable-next-line: missing-fields
                 style_mods = { vertical_align = "center", height = 40 / playerDisplayScale },
                 {
                     type = "label",
@@ -193,6 +221,7 @@ function listGui.buildListGui(globalPlayer, listData, listEntry, totalEntries)
         flibGui.add(elems.kanbanGuiTaskFlow, {
             type = "button",
             caption = "Add new task",
+            ---@diagnostic disable-next-line: missing-fields
             style_mods = { horizontally_stretchable = true, height = 50 / playerDisplayScale },
             handler = { [eventsDefine.on_gui_click] = showAddTask }
         })
@@ -205,6 +234,7 @@ function listGui.buildListGui(globalPlayer, listData, listEntry, totalEntries)
             {
                 type = "flow",
                 direction = "horizontal",
+                ---@diagnostic disable-next-line: missing-fields
                 style_mods = { vertical_align = "center", height = 50 / playerDisplayScale, padding = { 3, 6 } },
                 {
                     type = "textfield",

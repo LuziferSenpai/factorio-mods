@@ -2,6 +2,22 @@ local kanbanGui = require("__tasktorio__/scripts/gui/kanban")
 local eventsDefine = defines.events
 local eventsLib = {}
 
+---@class GlobalPlayer
+---@field guis { tasks: table<string, LuaGuiElement>[]; [string]: LuaGuiElement }
+---@field indexString string
+---@field forceIndexString string
+---@field displayResolution DisplayResolution
+---@field displayScale number
+
+---@class Task
+---@field title string
+---@field description string
+
+---@class ListEntry
+---@field name string
+---@field tasks Task[]
+
+---@param player LuaPlayer
 local function initPlayer(player)
     local playerIndexString = tostring(player.index)
 
@@ -21,8 +37,11 @@ local function initPlayer(player)
 end
 
 local function initStorage()
+    ---@type table<string, GlobalPlayer>
     storage.players = storage.players or {}
+    ---@type Task[]
     storage.allTasks = storage.allTasks or {}
+    ---@type table<string, { tasks: Task[], lists: ListEntry[] }>
     storage.forceData = storage.forceData or {}
 
     for _, force in pairs(game.forces) do
@@ -75,8 +94,7 @@ local function initStorage()
                     name = "List 11",
                     tasks = {}
                 }
-            },
-            labels = {}
+            }
         }
     end
 
@@ -91,17 +109,21 @@ local function initStorage()
 end
 
 eventsLib.events = {
+    ---@param event EventData.on_player_created
     [eventsDefine.on_player_created] = function(event)
         initPlayer(game.players[event.player_index])
     end,
+    ---@param event EventData.on_player_display_resolution_changed
     [eventsDefine.on_player_display_resolution_changed] = function(event)
         storage.players[tostring(event.player_index)].displayResolution = game.players[event.player_index].display_resolution
     end,
+    ---@param event EventData.on_player_removed
     [eventsDefine.on_player_removed] = function(event)
         if storage.players then
             storage.players[tostring(event.player_index)] = nil
         end
     end,
+    ---@param event EventData.on_player_display_scale_changed
     [eventsDefine.on_player_display_scale_changed] = function(event)
         storage.players[tostring(event.player_index)].displayScale = game.players[event.player_index].display_scale
     end

@@ -1,5 +1,8 @@
 local lib = {}
 
+---@param parentElement LuaGuiElement
+---@param fromIndex number
+---@param toIndex number
 function lib.moveChildren(parentElement, fromIndex, toIndex)
     local element = parentElement.children[fromIndex]
     local tempElement = parentElement.add({type = "empty-widget", index = toIndex})

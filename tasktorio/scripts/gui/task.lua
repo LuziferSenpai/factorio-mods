@@ -1,49 +1,67 @@
+---@type flib_gui
 local flibGui = require("__flib__/gui")
 local lib = require("__tasktorio__/scripts/gui/lib")
 local eventsDefine = defines.events
 local taskGui = {}
 
+---@param event EventData.on_gui_click
 local function openTaskOverview(event)
     local element = event.element
 
     game.print(element.name .. " | " .. event.tick)
 end
 
+---@param event EventData.on_gui_click
 local function moveTaskElement(event)
     local element = event.element
     local taskElement = element.parent.parent.parent
-    local taskFlowElement = taskElement.parent
-    local listElement = taskFlowElement.parent.parent.parent
-    local taskListData = storage.forceData[taskElement.tags.forceIndexString].lists[listElement.get_index_in_parent()].tasks
-    local currentListId = taskElement.get_index_in_parent()
-    local isBackwards = element.sprite == "tasktorio_arrow_up"
-    local newListId = currentListId + (isBackwards and -1 or 2)
 
-    if event.control then
-        newListId = isBackwards and 1 or #taskListData + 1
-    elseif event.shift then
-        newListId = currentListId + (isBackwards and -5 or 6)
-    end
+    if taskElement then
+        local taskFlowElement = taskElement.parent
 
-    newListId = math.max(1, math.min(newListId, #taskListData + 1))
+        if taskFlowElement then
+            local listElement = taskFlowElement.parent.parent.parent
 
-    local currentListEntry = table.remove(taskListData, currentListId)
+            if listElement then
+                local taskListData = storage.forceData[taskElement.tags.forceIndexString].lists[listElement.get_index_in_parent()].tasks
+                local currentListId = taskElement.get_index_in_parent()
+                local isBackwards = element.sprite == "tasktorio_arrow_up"
+                local newListId = currentListId + (isBackwards and -1 or 2)
 
-    table.insert(taskListData, newListId - 1, currentListEntry)
+                if event.control then
+                    newListId = isBackwards and 1 or #taskListData + 1
+                elseif event.shift then
+                    newListId = currentListId + (isBackwards and -5 or 6)
+                end
 
-    lib.moveChildren(taskFlowElement, currentListId, newListId)
+                newListId = math.max(1, math.min(newListId, #taskListData + 1))
 
-    for _, childElement in pairs(taskFlowElement.children) do
-        if childElement.tags and childElement.tags.forceIndexString then
-            local indexInParent = childElement.get_index_in_parent()
-            local childFlowElement = childElement.children[1].children[3]
+                local currentListEntry = table.remove(taskListData, currentListId)
 
-            childFlowElement.children[1].enabled = indexInParent ~= 1
-            childFlowElement.children[2].enabled = indexInParent ~= #taskListData
+                table.insert(taskListData, newListId - 1, currentListEntry)
+
+                lib.moveChildren(taskFlowElement, currentListId, newListId)
+
+                for _, childElement in pairs(taskFlowElement.children) do
+                    if childElement.tags and childElement.tags.forceIndexString then
+                        local indexInParent = childElement.get_index_in_parent()
+                        local childFlowElement = childElement.children[1].children[3]
+
+                        childFlowElement.children[1].enabled = indexInParent ~= 1
+                        childFlowElement.children[2].enabled = indexInParent ~= #taskListData
+                    end
+                end
+            end
         end
     end
 end
 
+---@param globalPlayer GlobalPlayer
+---@param taskFlow LuaGuiElement
+---@param taskData Task
+---@param taskEntry number
+---@param totalEntries number
+---@param globalTaskId number
 function taskGui.buildTaskGui(globalPlayer, taskFlow, taskData, taskEntry, totalEntries, globalTaskId)
     if taskFlow and taskFlow.valid then
         local playerDisplayScale = globalPlayer.displayScale
@@ -59,6 +77,7 @@ function taskGui.buildTaskGui(globalPlayer, taskFlow, taskData, taskEntry, total
             {
                 type = "flow",
                 direction = "horizontal",
+                ---@diagnostic disable-next-line: missing-fields
                 style_mods = { vertical_align = "center", height = 50 / playerDisplayScale, margin = { 3, 6 }, padding = 0 },
                 {
                     type = "label",
@@ -101,11 +120,13 @@ function taskGui.buildTaskGui(globalPlayer, taskFlow, taskData, taskEntry, total
                 type = "flow",
                 direction = "horizontal",
                 ignored_by_interaction = true,
+                ---@diagnostic disable-next-line: missing-fields
                 style_mods = { height = 28 / playerDisplayScale, margin = { 0, 6, 3, 6 }, padding = 0 },
                 {
                     type = "sprite",
                     sprite = "tasktorio-description",
                     resize_to_sprite = false,
+                    ---@diagnostic disable-next-line: missing-fields
                     style_mods = { size = 16 }
                 }
             })

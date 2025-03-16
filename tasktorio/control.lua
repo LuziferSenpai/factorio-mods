@@ -1,3 +1,4 @@
+---@type event_handler
 local handler = require("event_handler")
 
 handler.add_libraries({

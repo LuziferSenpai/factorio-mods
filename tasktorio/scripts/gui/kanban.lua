@@ -1,10 +1,12 @@
 local modGui = require("__core__/lualib/mod-gui")
+---@type flib_gui
 local flibGui = require("__flib__/gui")
 local listGui = require("__tasktorio__/scripts/gui/list")
 local lib = require("__tasktorio__/scripts/gui/lib")
 local eventsDefine = defines.events
 local kanbanGui = {}
 
+---@param event EventData.on_gui_click
 local function toggleMainGui(event)
     local globalPlayer = storage.players[tostring(event.player_index)]
     local kanbanGuiMain = globalPlayer.guis.kanbanGuiMain
@@ -20,6 +22,7 @@ local function toggleMainGui(event)
     end
 end
 
+---@param event EventData.on_gui_click
 local function showAddList(event)
     local element = event.element
     local addListElement = element.parent.children[#element.parent.children]
@@ -30,6 +33,7 @@ local function showAddList(event)
     addListElement.children[1].children[1].text = ""
 end
 
+---@param event EventData.on_gui_click | EventData.on_gui_confirmed
 local function addList(event)
     local textfieldElement = event.element.parent.children[1]
 
@@ -37,6 +41,8 @@ local function addList(event)
         local listFlowElement = event.element.parent.parent.parent
         local globalPlayer = storage.players[tostring(event.player_index)]
         local lists = storage.forceData[globalPlayer.forceIndexString].lists
+
+        if not listFlowElement then return end
 
         table.insert(lists, {
             name = textfieldElement.text,
@@ -63,13 +69,18 @@ local function addList(event)
     end
 end
 
+---@param event EventData.on_gui_click
 local function hideAddList(event)
     local addListElement = event.element.parent.parent
+
+    if not addListElement then return end
 
     addListElement.visible = false
     addListElement.parent.children[addListElement.get_index_in_parent() - 1].visible = true
 end
 
+---@param globalPlayer GlobalPlayer
+---@param player LuaPlayer
 function kanbanGui.buildGuiButton(globalPlayer, player)
     local kanbanGuiButton = globalPlayer.guis.kanbanGuiButton
 
@@ -86,6 +97,8 @@ function kanbanGui.buildGuiButton(globalPlayer, player)
     end
 end
 
+---@param globalPlayer GlobalPlayer
+---@param player LuaPlayer
 function kanbanGui.buildMainGui(globalPlayer, player)
     local kanbanGuiMain = globalPlayer.guis.kanbanGuiMain
 
@@ -98,6 +111,7 @@ function kanbanGui.buildMainGui(globalPlayer, player)
             name = "kanbanGuiMain",
             direction = "vertical",
             location = { 0, 0 },
+            ---@diagnostic disable-next-line: missing-fields
             style_mods = { width = playerDisplayResolution.width / playerDisplayScale, height = playerDisplayResolution.height / playerDisplayScale },
             {
                 type = "flow",
@@ -155,6 +169,7 @@ function kanbanGui.buildMainGui(globalPlayer, player)
         flibGui.add(elems.kanbanGuiListFlow, {
             type = "button",
             caption = "Add new list",
+            ---@diagnostic disable-next-line: missing-fields
             style_mods = { height = 54 / playerDisplayScale, width = 325 / playerDisplayScale },
             handler = { [eventsDefine.on_gui_click] = showAddList }
         })
@@ -164,10 +179,12 @@ function kanbanGui.buildMainGui(globalPlayer, player)
             style = "tasktorio_list_frame",
             direction = "vertical",
             visible = false,
+            ---@diagnostic disable-next-line: missing-fields
             style_mods = { width = 325 / playerDisplayScale },
             {
                 type = "flow",
                 direction = "horizontal",
+                ---@diagnostic disable-next-line: missing-fields
                 style_mods = { vertical_align = "center", height = 40 / playerDisplayScale },
                 {
                     type = "textfield",
