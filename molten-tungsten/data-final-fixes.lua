@@ -195,6 +195,7 @@ local function createRecipe(item)
                     icons = makeCastingIcons(item, moltenTungstenAmount, otherFluid),
                     localised_name = { "molten-tungsten.casting", get_item_localised_name(item.name) },
                     category = "metallurgy",
+                    additional_categories = meld.delete(),
                     subgroup = "casting-" .. item.subgroup,
                     ingredients = meld.overwrite(ingredients),
                     allow_decomposition = false,
