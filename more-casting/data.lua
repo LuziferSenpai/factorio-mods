@@ -63,5 +63,5 @@ end
 --- @param castingFluid MoreCasting.CastingFluid
 --- @param ingredients MoreCasting.CastableIngredientsTable
 function MoreCasting.add_castable_ingredients(castingFluid, ingredients)
-    meld(castingIngredients[castingFluid] or {}, ingredients)
+    castingIngredients[castingFluid] = meld(castingIngredients[castingFluid] or {}, ingredients)
 end
