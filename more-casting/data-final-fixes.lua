@@ -7,42 +7,6 @@ local foundryTechnology = data.raw.technology["foundry"]
 local defaultIconSizeDefine = defines.default_icon_size
 local hideRecipes = settings.startup["more-casting-hide-recipes"].value
 local originalTech = settings.startup["more-casting-original-tech"].value
-local banList = {
-    ["pipe"] = true,
-    ["pipe-to-ground"] = true,
-    ["iron-plate"] = true,
-    ["copper-plate"] = true,
-    ["steel-plate"] = true,
-    ["iron-gear-wheel"] = true,
-    ["iron-stick"] = true,
-    ["low-density-structure"] = true,
-    ["concrete"] = true,
-    ["copper-cable"] = true
-}
-local castingIngredients = {
-    moltenIron = {
-        ["iron-plate"] = 10,      --10, 5
-        ["steel-plate"] = 30,     --30, 20
-        ["iron-gear-wheel"] = 30, --10, 5
-        ["iron-stick"] = 5,       --5, 2.5
-        ["pipe"] = 10             --10, 5
-    },
-    moltenCopper = {
-        ["copper-plate"] = 10, --10, 5
-        ["copper-cable"] = 2.5 --2.5, 1.25
-    }
-}
-local itemRaws = {
-    "item",
-    "item-with-entity-data",
-    "rail-planner",
-    "repair-tool",
-    "ammo",
-    "space-platform-starter-pack",
-    "capsule",
-    "armor",
-    "tool"
-}
 
 local function get_prototype(base_type, name)
     for type_name in pairs(defines.prototypes[base_type]) do
@@ -170,8 +134,8 @@ local function ingredientsMagic(ingredients)
     if ingredients and #ingredients > 0 then
         for index, ingredient in pairs(ingredients) do
             if ingredient.type == "item" then
-                local moltenIronAmountC = castingIngredients.moltenIron[ingredient.name]
-                local moltenCopperAmountC = castingIngredients.moltenCopper[ingredient.name]
+                local moltenIronAmountC = MoreCasting.castingIngredients.moltenIron[ingredient.name]
+                local moltenCopperAmountC = MoreCasting.castingIngredients.moltenCopper[ingredient.name]
 
                 if moltenIronAmountC then
                     moltenIronIngredients = moltenIronIngredients + 1
@@ -213,7 +177,7 @@ local function ingredientsMagic(ingredients)
 end
 
 local function createRecipe(item)
-    if not banList[item.name] then
+    if not MoreCasting.banList[item.name] then
         local recipe = recipes[item.name]
 
         if recipe then
@@ -272,7 +236,7 @@ for _, subGroup in pairs(table.deepcopy(data.raw["item-subgroup"])) do
     })
 end
 
-for _, itemRaw in pairs(itemRaws) do
+for _, itemRaw in pairs(MoreCasting.itemRaws) do
     for _, item in pairs(data.raw[itemRaw]) do
         createRecipe(item)
     end
