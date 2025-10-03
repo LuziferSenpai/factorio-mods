@@ -70,7 +70,7 @@ local newPipeToGrounds = {
         blueprintString = "0eNqN0dsKwjAMBuB3yXUqdmvF7VVERF2QgEtH23lg9N3t9ELFKV4U0vbPRyAD7I49dZ4lQj0A750EqFcDBD7I9ji+ybYlqKHjjlR06uBdLw0kBJaGLlDrtEYgiRyZHr33y3UjfbsjnwP4agBC50IOOxn1DCgzswjXXBQzmxJ+AAVOD6FEFIVz/4vU02T5hfxFzTOF0LCn/eN/OQGb/2H7OuMbrIsJ2f4vl19lMy6LI7WZeW4e4UQ+3AN2UVSmqmw+Ri91SjefBrDq"
     },
 }
-local undergroundCollisionMask = {}
+local undergroundCollisionMask = { layers = { lava_tile = true } }
 
 if mods["space-age"] then
     undergroundCollisionMask = { layers = { empty_space = true, lava_tile = true } }
