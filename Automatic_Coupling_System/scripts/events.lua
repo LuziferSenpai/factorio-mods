@@ -246,10 +246,11 @@ local function doTrainCoupleLogic(train)
 
                             if trainGroup and #trainGroup > 0 then
                                 targetCarriageTrainSchedule.group = trainGroup
-                            else
-                                if scheduleRecords and #scheduleRecords > 0 then targetCarriageTrainSchedule.set_records(scheduleRecords) end
                             end
-
+                            if scheduleRecords and #scheduleRecords > 0 then 
+                                targetCarriageTrainSchedule.set_records(scheduleRecords) 
+                            end
+                            
                             if scheduleCurrent then targetCarriageTrainSchedule.go_to_station(scheduleCurrent) end
 
                             targetCarriageTrainSchedule.set_stopped(false)
