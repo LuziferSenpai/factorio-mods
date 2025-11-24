@@ -223,13 +223,8 @@ local function doTrainCoupleLogic(train)
 
                         if decoupleCarriageTrainSchedule then
                             if scheduleInterrupts and #scheduleInterrupts > 0 then decoupleCarriageTrainSchedule.set_interrupts(scheduleInterrupts) end
-
-                            if trainGroup and #trainGroup > 0 then
-                                decoupleCarriageTrainSchedule.group = trainGroup
-                            else
-                                if scheduleRecords and #scheduleRecords > 0 then decoupleCarriageTrainSchedule.set_records(scheduleRecords) end
-                            end
-
+                            if trainGroup and #trainGroup > 0 then decoupleCarriageTrainSchedule.group = trainGroup end
+                            if scheduleRecords and #scheduleRecords > 0 then decoupleCarriageTrainSchedule.set_records(scheduleRecords) end
                             if scheduleCurrent then decoupleCarriageTrainSchedule.go_to_station(scheduleCurrent) end
 
                             decoupleCarriageTrainSchedule.set_stopped(false)
@@ -243,13 +238,8 @@ local function doTrainCoupleLogic(train)
 
                         if targetCarriageTrainSchedule then
                             if scheduleInterrupts and #scheduleInterrupts > 0 then targetCarriageTrainSchedule.set_interrupts(scheduleInterrupts) end
-
-                            if trainGroup and #trainGroup > 0 then
-                                targetCarriageTrainSchedule.group = trainGroup
-                            else
-                                if scheduleRecords and #scheduleRecords > 0 then targetCarriageTrainSchedule.set_records(scheduleRecords) end
-                            end
-
+                            if trainGroup and #trainGroup > 0 then targetCarriageTrainSchedule.group = trainGroup end
+                            if scheduleRecords and #scheduleRecords > 0 then targetCarriageTrainSchedule.set_records(scheduleRecords) end
                             if scheduleCurrent then targetCarriageTrainSchedule.go_to_station(scheduleCurrent) end
 
                             targetCarriageTrainSchedule.set_stopped(false)
@@ -263,13 +253,8 @@ local function doTrainCoupleLogic(train)
 
         if not didDecouple then
             if scheduleInterrupts and #scheduleInterrupts > 0 then trainSchedule.set_interrupts(scheduleInterrupts) end
-
-            if trainGroup and #trainGroup > 0 then
-                if trainGroup and #trainGroup > 0 then trainSchedule.group = trainGroup end
-            else
-                if scheduleRecords and #scheduleRecords > 0 then trainSchedule.set_records(scheduleRecords) end
-            end
-
+            if trainGroup and #trainGroup > 0 then trainSchedule.group = trainGroup end
+            if scheduleRecords and #scheduleRecords > 0 then trainSchedule.set_records(scheduleRecords) end
             if scheduleCurrent then trainSchedule.go_to_station(scheduleCurrent) end
 
             trainSchedule.set_stopped(false)
