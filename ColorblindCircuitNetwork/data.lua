@@ -1,8 +1,8 @@
 local modName = "__ColorblindCircuitNetwork__"
 
 -- icon when item is 'in hand'
-data.raw["item"]["green-wire"].icon = modName .. "/graphics/yellow-wire-icon.png"
-data.raw["item"]["red-wire"].icon = modName .. "/graphics/blue-wire-icon.png"
+data.raw["item"]["green-wire"].icon = modName .. "/graphics/new-yellow-wire-x56.png"
+data.raw["item"]["red-wire"].icon = modName .. "/graphics/new-blue-wire-x56.png"
 
 -- custom-input icons for rhs of main quick select bar at bottom of screen
 data.raw["shortcut"]["give-green-wire"].icon = modName .. "/graphics/new-yellow-wire-x56.png"
