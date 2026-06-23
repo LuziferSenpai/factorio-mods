@@ -1,4 +1,4 @@
-local meld = require("__core__/lualib/meld")
+local meld = require("__core__.lualib.meld")
 
 data:extend({
     meld(table.deepcopy(data.raw.technology["steel-axe"]), {
@@ -8,7 +8,7 @@ data:extend({
         prerequisites = { "steel-axe", "uranium-processing" },
         research_trigger = {
             type = "mine-entity",
-            entity = "uranium-ore"
+            entities = { "uranium-ore" }
         }
     })
 })

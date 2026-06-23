@@ -1,11 +1,11 @@
 {
     "name": "atomic_pickaxe",
-    "version": "3.0.0",
+    "version": "3.1.0",
     "title": "Atomic Pickaxe!",
     "author": "LuziferSenpai",
     "contact": "",
 	"homepage": "",
     "description": "This MOD adds a Technology that makes Mining faster!",
     "dependencies": ["base"],
-    "factorio_version": "2.0"
+    "factorio_version": "2.1"
 }
