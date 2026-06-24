@@ -1,5 +1,5 @@
-local meld = require("__core__/lualib/meld")
-local standardElectronicIcons = require("__Electronic_Locomotives__/prototypes/util")
+local meld = require("__core__.lualib.meld")
+local standardElectronicIcons = require("prototypes.util")
 local name = "electronic-cargo-locomotive"
 local color = "#a61a1a"
 
@@ -8,9 +8,7 @@ data:extend({
         name = name,
         icon = meld.delete(),
         icons = standardElectronicIcons(color),
-        minable = {
-            result = name
-        },
+        minable = { result = name },
         max_health = 2000,
         weight = 5000,
         max_speed = 3,
@@ -31,11 +29,9 @@ data:extend({
         name = name,
         ingredients = meld.overwrite({
             { type = "item", name = "electronic-standard-locomotive", amount = 1 },
-            { type = "item", name = "battery",                        amount = 20 },
-            { type = "item", name = "electric-engine-unit",           amount = 20 }
+            { type = "item", name = "battery", amount = 20 },
+            { type = "item", name = "electric-engine-unit", amount = 20 }
         }),
-        results = {
-            { name = name }
-        }
+        results = { { name = name } }
     })
 })

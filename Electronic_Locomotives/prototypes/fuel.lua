@@ -1,4 +1,4 @@
-local meld = require("__core__/lualib/meld")
+local meld = require("__core__.lualib.meld")
 local modName = "__Electronic_Locomotives__"
 local fuel = {
     type = "item",

@@ -1,4 +1,4 @@
-local meld = require("__core__/lualib/meld")
+local meld = require("__core__.lualib.meld")
 local modName = "__Electronic_Locomotives__"
 local name = "electronic-standard-provider"
 
@@ -8,9 +8,7 @@ data:extend({
         icon = modName .. "/graphics/" .. name .. "-icon.png",
         icon_size = 32,
         subgroup = meld.delete(),
-        minable = {
-            result = name
-        },
+        minable = { result = name },
         enable_gui = false,
         gui_mode = "none",
         allow_copy_paste = false,
@@ -63,12 +61,10 @@ data:extend({
     meld(table.deepcopy(data.raw["recipe"]["accumulator"]), {
         name = name,
         ingredients = meld.overwrite({
-            { type = "item", name = "accumulator",        amount = 5 },
-            { type = "item", name = "battery",            amount = 10 },
+            { type = "item", name = "accumulator", amount = 5 },
+            { type = "item", name = "battery", amount = 10 },
             { type = "item", name = "electronic-circuit", amount = 20 }
         }),
-        results = {
-            { name = name }
-        }
+        results = { { name = name } }
     })
 })

@@ -1,5 +1,5 @@
-local meld = require("__core__/lualib/meld")
-local standardElectronicIcons = require("__Electronic_Locomotives__/prototypes/util")
+local meld = require("__core__.lualib.meld")
+local standardElectronicIcons = require("prototypes/util")
 local name = "electronic-standard-locomotive"
 local color = "#53bb90"
 
@@ -8,9 +8,7 @@ data:extend({
         name = name,
         icon = meld.delete(),
         icons = standardElectronicIcons(color),
-        minable = {
-            result = name
-        },
+        minable = { result = name },
         color = util.color(color),
         localised_description = { "", { "entity-description.locomotive" }, "\n", { "electronic-locomotives.locomotive-description" } },
         is_electronic = true
@@ -24,12 +22,10 @@ data:extend({
     meld(table.deepcopy(data.raw["recipe"]["locomotive"]), {
         name = name,
         ingredients = meld.overwrite({
-            { type = "item", name = "locomotive",           amount = 1 },
-            { type = "item", name = "battery",              amount = 10 },
+            { type = "item", name = "locomotive", amount = 1 },
+            { type = "item", name = "battery", amount = 10 },
             { type = "item", name = "electric-engine-unit", amount = 20 }
         }),
-        results = {
-            { name = name }
-        }
+        results = { { name = name } }
     })
 })

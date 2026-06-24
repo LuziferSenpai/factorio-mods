@@ -67,10 +67,10 @@ for _, provider in pairs(providers) do
     end
 end
 
-if data.raw["cargo-wagon"]["cargo-wagon"].max_speed < 3 then
-    data.raw["cargo-wagon"]["cargo-wagon"].max_speed = 3
-end
+-- if data.raw["cargo-wagon"]["cargo-wagon"].max_speed < 3 then
+--     data.raw["cargo-wagon"]["cargo-wagon"].max_speed = 3
+-- end
 
-if data.raw["fluid-wagon"]["fluid-wagon"].max_speed < 3 then
-    data.raw["fluid-wagon"]["fluid-wagon"].max_speed = 3
-end
+-- if data.raw["fluid-wagon"]["fluid-wagon"].max_speed < 3 then
+--     data.raw["fluid-wagon"]["fluid-wagon"].max_speed = 3
+-- end

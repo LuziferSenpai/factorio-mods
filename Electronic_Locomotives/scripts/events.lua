@@ -1,15 +1,15 @@
-local quene = require("__Electronic_Locomotives__/scripts/quene")
-local flibMath = require("__flib__/math")
-local flibMigration = require("__flib__/migration")
-local flibTable = require("__flib__/table")
+local quene = require("scripts.quene")
+local flibMath = require("__flib__.math")
+local flibTable = require("__flib__.table")
+local flibArray = require("__flib__.array")
 local trainStateDefine = defines.train_state
-local eventsDefine = defines.events
 local fuelValue = 10000000
 local eventsLib = {}
-local queneMetatable = {
-    __index = quene
-}
+local queneMetatable = { __index = quene }
+local isQualityEnabled = false
 
+---@param force LuaForce
+---@return string
 local function getFuel(force)
     local technologies = force.technologies
     local fuel = "electronic-fuel-1"
@@ -27,6 +27,7 @@ local function getFuel(force)
     return fuel
 end
 
+---@param unitNumberString string
 local function removeFromQuene(unitNumberString)
     local gameTick = storage.locomotives[unitNumberString]
 
@@ -34,11 +35,14 @@ local function removeFromQuene(unitNumberString)
     storage.locomotives[unitNumberString] = nil
 end
 
+---@param eventData EventData.on_built_entity | EventData.on_entity_cloned | EventData.on_robot_built_entity | EventData.script_raised_built | EventData.script_raised_revive | { entity: LuaEntity }
 local function onEntityCreated(eventData)
     local entity = eventData.entity or eventData.destination
+    
+    if not (entity and entity.valid) then return end
+
     local surface = entity.surface
 
-    if not (entity and entity.valid) then return end
     if not surface.planet then return end
 
     local entityName = entity.name
@@ -53,6 +57,7 @@ local function onEntityCreated(eventData)
     end
 end
 
+---@param eventData EventData.on_surface_created | EventData.on_surface_imported
 local function onSurfaceCreated(eventData)
     local surface = game.surfaces[eventData.surface_index]
 
@@ -65,18 +70,27 @@ local function onSurfaceCreated(eventData)
     end
 end
 
+---@class GlobalTable
+---@field fuel { [string] : string }
+---@field updateQuene Quene
+---@field locomotives { [string] : int }
+---@field providers { [string] : table<string, table<string, LuaEntity>> }
+---@field locomotiveLookup { [string] : int }
+---@field providerLookup { [string] : boolean }
+
 local function initGlobals()
     local locomotiveList = prototypes.item["electronic-locomotive-list"].get_entity_filters(defines.selection_mode.select)
     local providerList = prototypes.item["electronic-provider-list"].get_entity_filters(defines.selection_mode.select)
     local nameFilter = {}
 
-    storage.players = storage.players or {}
     storage.fuel = storage.fuel or {}
     storage.updateQuene = storage.updateQuene or {}
     storage.locomotives = storage.locomotives or {}
     storage.providers = storage.providers or {}
     storage.locomotiveLookup = {}
     storage.providerLookup = {}
+
+    isQualityEnabled = not not script.active_mods["quality"]
 
     setmetatable(storage.updateQuene, queneMetatable)
 
@@ -128,26 +142,21 @@ local function initGlobals()
 end
 
 eventsLib.events = {
-    --New entity
-    [eventsDefine.on_built_entity] = onEntityCreated,
-    [eventsDefine.on_entity_cloned] = onEntityCreated,
-    [eventsDefine.on_robot_built_entity] = onEntityCreated,
-    [eventsDefine.script_raised_built] = onEntityCreated,
-    [eventsDefine.script_raised_revive] = onEntityCreated,
-
-    --Surface
-    [eventsDefine.on_surface_created] = onSurfaceCreated,
-    [eventsDefine.on_surface_imported] = onSurfaceCreated,
-    [eventsDefine.on_surface_deleted] = function(eventData)
+    ["on_built_entity"] = onEntityCreated,
+    ["on_entity_cloned"] = onEntityCreated,
+    ["on_robot_built_entity"] = onEntityCreated,
+    ["script_raised_built"] = onEntityCreated,
+    ["script_raised_revive"] = onEntityCreated,
+    ["on_surface_created"] = onSurfaceCreated,
+    ["on_surface_imported"] = onSurfaceCreated,
+    ["on_surface_deleted"] = function(eventData)
         local surfaceIndexString = tostring(eventData.surface_index)
 
         for _, providerForce in pairs(storage.providers) do
             providerForce[surfaceIndexString] = nil
         end
     end,
-
-    --Force
-    [eventsDefine.on_force_created] = function(eventData)
+    ["on_force_created"] = function(eventData)
         local force = eventData.force
         local forceIndexString = tostring(force.index)
 
@@ -162,7 +171,7 @@ eventsLib.events = {
             end
         end
     end,
-    [eventsDefine.on_forces_merged] = function(eventData)
+    ["on_forces_merged"] = function(eventData)
         local destinationForce = eventData.destination
         local sourceForceIndexString = tostring(eventData.source_index)
         local destinationForceIndexString = tostring(destinationForce.index)
@@ -179,9 +188,7 @@ eventsLib.events = {
             end
         end
     end,
-
-    --Fuel logic
-    [eventsDefine.on_research_finished] = function(eventData)
+    ["on_research_finished"] = function(eventData)
         local research = eventData.research
         local researchName = research.name
 
@@ -195,14 +202,14 @@ eventsLib.events = {
             storage.fuel[tostring(research.force.index)] = "electronic-fuel-2"
         end
     end,
-    [eventsDefine.on_train_changed_state] = function(eventData)
+    ["on_train_changed_state"] = function(eventData)
         local train = eventData.train
         local trainState = train.state
 
         if (trainState == trainStateDefine.wait_signal or trainState == trainStateDefine.wait_station) then return end
 
         local locomotiveLookup = storage.locomotiveLookup
-        local locomotives = flibTable.array_merge({ train.locomotives.front_movers, train.locomotives.back_movers })
+        local locomotives = flibArray.flatten({ train.locomotives.front_movers, train.locomotives.back_movers })
         local locomotiveUpdateList = {}
 
         for _, locomotive in pairs(locomotives) do
@@ -232,7 +239,7 @@ eventsLib.events = {
             end
         end
     end,
-    [eventsDefine.on_tick] = function(eventData)
+    ["on_tick"] = function(eventData)
         if not next(storage.locomotives) then return end
 
         local gameTick = eventData.tick
@@ -244,6 +251,7 @@ eventsLib.events = {
 
         local allProviders = storage.providers
         local allFuels = storage.fuel
+        ---@type LuaEntity, string, string, table<string, LuaEntity>, LuaBurner, number, number
         local locomotive, surfaceIndexString, forceIndexString, providers, burner, missingFuel, newFuelAmount
         local gameTickPlusOne = gameTick + 1
         local nextFuelTick = gameTickPlusOne
@@ -288,7 +296,7 @@ eventsLib.events = {
 
                         nextFuelTick = gameTick + (fuelTick > 0 and fuelTick or 1)
 
-                        burner.currently_burning = allFuels[forceIndexString]
+                        burner.currently_burning = isQualityEnabled and allFuels[forceIndexString] or {name = allFuels[forceIndexString], quality = locomotive.quality }
                         burner.remaining_burning_fuel = remainingBurningFuel
                     end
                 end
@@ -327,80 +335,51 @@ eventsLib.on_configuration_changed = function(eventData)
 
     if not (electronicOldVersion and electronicChanges.new_version) then return end
 
-    local electronicVersionMigration = {
-        ["0.3.14"] = function()
-            local scriptData = storage.script_data
-            local guis = scriptData.guis
+    if electronicOldVersion < "3.1.1" and electronicOldVersion >= "3.0.0" then
+        if next(storage.updateQuene) then
+            local newQuene = {}
 
-            for _, player in (game.players) do
-                mod_gui.get_button_flow(player).ElectronicButton.destroy()
+            for gameTick, locomotives in pairs(storage.updateQuene) do
+                for unitNumberString, locomotiveData in pairs(locomotives) do
+                    if locomotiveData.valid then
+                        newQuene[unitNumberString] = { entity = locomotiveData, gameTick = gameTick }
 
-                if next(guis[player.index]) then
-                    guis[player.index].A["01"].destroy()
-                end
-            end
-
-            storage.script_data = nil
-        end,
-        ["1.0.5"] = function()
-            local scriptData = storage.script_data
-
-            if next(scriptData) then
-                for _, player in (scriptData.players) do
-                    player.button.destroy()
-                    player.frame.destroy()
-                end
-            end
-
-            storage.script_data = nil
-        end,
-        ["3.1.0"] = function()
-            if next(storage.updateQuene) then
-                local newQuene = {}
-
-                for gameTick, locomotives in pairs(storage.updateQuene) do
-                    for unitNumberString, locomotiveData in pairs(locomotives) do
-                        if locomotiveData.valid then
-                            newQuene[unitNumberString] = { entity = locomotiveData, gameTick = gameTick }
-
-                            removeFromQuene(unitNumberString)
-                        end
+                        removeFromQuene(unitNumberString)
                     end
                 end
-
-                for unitNumberString, locomotiveData in pairs(newQuene) do
-                    local entity = locomotiveData.entity
-
-                    storage.updateQuene:add(entity, locomotiveData.gameTick, unitNumberString, tostring(entity.surface.index), tostring(entity.force_index))
-                    storage.locomotives[unitNumberString] = locomotiveData.gameTick
-                end
             end
-        end,
-        ["3.1.1"] = function()
-            if next(storage.updateQuene) then
-                local newQuene = {}
 
-                for gameTick, locomotives in pairs(storage.updateQuene) do
-                    for unitNumberString, locomotiveData in pairs(locomotives) do
-                        if locomotiveData.valid then
-                            newQuene[unitNumberString] = { entity = locomotiveData, gameTick = gameTick }
+            for unitNumberString, locomotiveData in pairs(newQuene) do
+                local entity = locomotiveData.entity
 
-                            removeFromQuene(unitNumberString)
-                        end
-                    end
-                end
-
-                for unitNumberString, locomotiveData in pairs(newQuene) do
-                    local entity = locomotiveData.entity
-
-                    storage.updateQuene:add(entity, locomotiveData.gameTick, unitNumberString, tostring(entity.surface.index), tostring(entity.force_index))
-                    storage.locomotives[unitNumberString] = locomotiveData.gameTick
-                end
+                storage.updateQuene:add(entity, locomotiveData.gameTick, unitNumberString, tostring(entity.surface.index), tostring(entity.force_index))
+                storage.locomotives[unitNumberString] = locomotiveData.gameTick
             end
         end
-    }
+    end
 
-    flibMigration.run(electronicOldVersion, electronicVersionMigration)
+    if electronicOldVersion == "3.1.1" then
+        if next(storage.updateQuene) then
+            local newQuene = {}
+
+            for gameTick, locomotives in pairs(storage.updateQuene) do
+                for unitNumberString, locomotiveData in pairs(locomotives) do
+                    if locomotiveData.valid then
+                        newQuene[unitNumberString] = { entity = locomotiveData, gameTick = gameTick }
+
+                        removeFromQuene(unitNumberString)
+                    end
+                end
+            end
+
+            for unitNumberString, locomotiveData in pairs(newQuene) do
+                local entity = locomotiveData.entity
+
+                storage.updateQuene:add(entity, locomotiveData.gameTick, unitNumberString, tostring(entity.surface.index), tostring(entity.force_index))
+                storage.locomotives[unitNumberString] = locomotiveData.gameTick
+            end
+        end
+    end
 end
 
 return eventsLib

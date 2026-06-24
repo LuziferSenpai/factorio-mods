@@ -1,6 +1,6 @@
 local modName = "__Electronic_Locomotives__"
 
-return function(color)
+return function (color)
     return {
         {
             icon = modName .. "/graphics/diesel-locomotive-base.png",

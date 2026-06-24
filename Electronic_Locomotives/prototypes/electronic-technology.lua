@@ -1,4 +1,4 @@
-local meld = require("__core__/lualib/meld")
+local meld = require("__core__.lualib.meld")
 local modName = "__Electronic_Locomotives__"
 local electronicTech = {
     type = "technology",
@@ -29,10 +29,10 @@ data:extend({
             time = 60,
             ingredients = {
                 { "automation-science-pack", 1 },
-                { "logistic-science-pack",   1 },
-                { "chemical-science-pack",   1 }
+                { "logistic-science-pack", 1 },
+                { "chemical-science-pack", 1 }
             }
-        },
+        }
     }),
     meld(table.deepcopy(electronicTech), {
         name = "electronic-locomotives-2",
@@ -47,8 +47,8 @@ data:extend({
             count = 800,
             ingredients = {
                 { "automation-science-pack", 1 },
-                { "logistic-science-pack",   1 },
-                { "chemical-science-pack",   1 },
+                { "logistic-science-pack", 1 },
+                { "chemical-science-pack", 1 },
                 { "production-science-pack", 1 }
             }
         }
@@ -61,8 +61,8 @@ data:extend({
             count = 1000,
             ingredients = {
                 { "automation-science-pack", 1 },
-                { "logistic-science-pack",   1 },
-                { "chemical-science-pack",   1 },
+                { "logistic-science-pack", 1 },
+                { "chemical-science-pack", 1 },
                 { "production-science-pack", 1 }
             }
         }
@@ -75,10 +75,10 @@ data:extend({
             count = 1200,
             ingredients = {
                 { "automation-science-pack", 1 },
-                { "logistic-science-pack",   1 },
-                { "chemical-science-pack",   1 },
+                { "logistic-science-pack", 1 },
+                { "chemical-science-pack", 1 },
                 { "production-science-pack", 1 },
-                { "utility-science-pack",    1 }
+                { "utility-science-pack", 1 }
             }
         }
     }),
@@ -90,10 +90,10 @@ data:extend({
             count = 1400,
             ingredients = {
                 { "automation-science-pack", 1 },
-                { "logistic-science-pack",   1 },
-                { "chemical-science-pack",   1 },
+                { "logistic-science-pack", 1 },
+                { "chemical-science-pack", 1 },
                 { "production-science-pack", 1 },
-                { "utility-science-pack",    1 }
+                { "utility-science-pack", 1 }
             }
         }
     }),
@@ -105,11 +105,11 @@ data:extend({
             count = 2000,
             ingredients = {
                 { "automation-science-pack", 1 },
-                { "logistic-science-pack",   1 },
-                { "chemical-science-pack",   1 },
+                { "logistic-science-pack", 1 },
+                { "chemical-science-pack", 1 },
                 { "production-science-pack", 1 },
-                { "utility-science-pack",    1 },
-                { "space-science-pack",      1 }
+                { "utility-science-pack", 1 },
+                { "space-science-pack", 1 }
             }
         }
     }),
@@ -120,17 +120,17 @@ data:extend({
             {
                 type = "unlock-recipe",
                 recipe = "electronic-heavy-provider"
-            },
+            }
         },
         unit = {
             count = 10000,
             ingredients = {
                 { "automation-science-pack", 1 },
-                { "logistic-science-pack",   1 },
-                { "chemical-science-pack",   1 },
+                { "logistic-science-pack", 1 },
+                { "chemical-science-pack", 1 },
                 { "production-science-pack", 1 },
-                { "utility-science-pack",    1 },
-                { "space-science-pack",      1 }
+                { "utility-science-pack", 1 },
+                { "space-science-pack", 1 }
             }
         }
     })
