@@ -3,6 +3,7 @@ script.on_event(defines.events.on_surface_created, function(event)
     local planet = game.planets[surface.name]
 
     if planet then
+        ---@type string
         local settingsValue = settings.startup["global-network-setting"].value
 
         if settingsValue == "for-free" then
@@ -33,8 +34,8 @@ script.on_event(defines.events.on_research_finished, function(event)
     local settingsValue = settings.startup["global-network-setting"].value
     local technology = event.research
 
-    if settingsValue == "for-free" then return end
-    if settingsValue == "planetary-research" then
+    if settingsValue == "for-free" then return
+    elseif settingsValue == "planetary-research" then
         if string.find(technology.name, "global%-power%-network-") then
             local planet = game.planets[technology.name:gsub("global%-power%-network%-", "")]
 
@@ -64,6 +65,7 @@ script.on_event(defines.events.on_research_finished, function(event)
 end)
 
 script.on_init(function()
+    ---@type string
     local settingsValue = settings.startup["global-network-setting"].value
 
     if settingsValue == "for-free" then
@@ -113,6 +115,7 @@ end)
 
 script.on_configuration_changed(function(event)
     if event.mod_startup_settings_changed then
+        ---@type string
         local settingsValue = settings.startup["global-network-setting"].value
 
         if settingsValue == "for-free" then

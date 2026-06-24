@@ -33,9 +33,9 @@ if settingsValue == "planetary-research" then
                 ingredients =
                 {
                     { "automation-science-pack", 1 },
-                    { "logistic-science-pack",   1 },
-                    { "chemical-science-pack",   1 },
-                    { "space-science-pack",      1 }
+                    { "logistic-science-pack", 1 },
+                    { "chemical-science-pack", 1 },
+                    { "space-science-pack", 1 }
                 },
                 time = 60
             },
@@ -69,10 +69,10 @@ if settingsValue == "planetary-research" then
                 count = 1000,
                 ingredients =
                 {
-                    { "automation-science-pack",      1 },
-                    { "logistic-science-pack",        1 },
-                    { "chemical-science-pack",        1 },
-                    { "space-science-pack",           1 },
+                    { "automation-science-pack", 1 },
+                    { "logistic-science-pack", 1 },
+                    { "chemical-science-pack", 1 },
+                    { "space-science-pack", 1 },
                     { "electromagnetic-science-pack", 1 }
                 },
                 time = 60
@@ -107,10 +107,10 @@ if settingsValue == "planetary-research" then
                 count = 1000,
                 ingredients =
                 {
-                    { "automation-science-pack",   1 },
-                    { "logistic-science-pack",     1 },
-                    { "chemical-science-pack",     1 },
-                    { "space-science-pack",        1 },
+                    { "automation-science-pack", 1 },
+                    { "logistic-science-pack", 1 },
+                    { "chemical-science-pack", 1 },
+                    { "space-science-pack", 1 },
                     { "agricultural-science-pack", 1 }
                 },
                 time = 60
@@ -145,10 +145,10 @@ if settingsValue == "planetary-research" then
                 count = 1000,
                 ingredients =
                 {
-                    { "automation-science-pack",  1 },
-                    { "logistic-science-pack",    1 },
-                    { "chemical-science-pack",    1 },
-                    { "space-science-pack",       1 },
+                    { "automation-science-pack", 1 },
+                    { "logistic-science-pack", 1 },
+                    { "chemical-science-pack", 1 },
+                    { "space-science-pack", 1 },
                     { "metallurgic-science-pack", 1 }
                 },
                 time = 60
@@ -173,6 +173,8 @@ if settingsValue == "planetary-research" then
             effects = {
                 {
                     type = "nothing",
+                    icon = modname .. "/graphics/power.png",
+                    icon_size = 128,
                     effect_description = { "global-power-network.global-planetary-network-effect", { "space-location-name.aquilo" } }
                 }
             },
@@ -181,16 +183,16 @@ if settingsValue == "planetary-research" then
                 count = 3000,
                 ingredients =
                 {
-                    { "automation-science-pack",      1 },
-                    { "logistic-science-pack",        1 },
-                    { "chemical-science-pack",        1 },
-                    { "production-science-pack",      1 },
-                    { "utility-science-pack",         1 },
-                    { "space-science-pack",           1 },
-                    { "metallurgic-science-pack",     1 },
-                    { "agricultural-science-pack",    1 },
+                    { "automation-science-pack", 1 },
+                    { "logistic-science-pack", 1 },
+                    { "chemical-science-pack", 1 },
+                    { "production-science-pack", 1 },
+                    { "utility-science-pack", 1 },
+                    { "space-science-pack", 1 },
+                    { "metallurgic-science-pack", 1 },
+                    { "agricultural-science-pack", 1 },
                     { "electromagnetic-science-pack", 1 },
-                    { "cryogenic-science-pack",       1 }
+                    { "cryogenic-science-pack", 1 }
                 },
                 time = 60
             },
@@ -241,17 +243,17 @@ elseif settingsValue == "endgame-research" then
                 count = 2000,
                 ingredients =
                 {
-                    { "automation-science-pack",      1 },
-                    { "logistic-science-pack",        1 },
-                    { "chemical-science-pack",        1 },
-                    { "production-science-pack",      1 },
-                    { "utility-science-pack",         1 },
-                    { "space-science-pack",           1 },
-                    { "metallurgic-science-pack",     1 },
-                    { "agricultural-science-pack",    1 },
+                    { "automation-science-pack", 1 },
+                    { "logistic-science-pack", 1 },
+                    { "chemical-science-pack", 1 },
+                    { "production-science-pack", 1 },
+                    { "utility-science-pack", 1 },
+                    { "space-science-pack", 1 },
+                    { "metallurgic-science-pack", 1 },
+                    { "agricultural-science-pack", 1 },
                     { "electromagnetic-science-pack", 1 },
-                    { "cryogenic-science-pack",       1 },
-                    { "promethium-science-pack",      1 }
+                    { "cryogenic-science-pack", 1 },
+                    { "promethium-science-pack", 1 }
                 },
                 time = 60
             },
