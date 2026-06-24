@@ -1,14 +1,14 @@
 {
     "name": "more-achievements",
-    "version": "0.0.2",
+    "version": "0.1.0",
     "title": "More Achievements",
     "author": "LuziferSenpai",
     "contact": "",
     "homepage": "",
     "description": "Extends the base game achievements with more tiers & quality types.",
     "dependencies": [
-        "base >= 2.0.21",
+        "base",
         "? quality"
     ],
-    "factorio_version": "2.0"
+    "factorio_version": "2.1"
 }
