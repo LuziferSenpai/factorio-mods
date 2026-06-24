@@ -1,6 +1,5 @@
-local logGui = require("__captains-log__/scripts/gui")
+local logGui = require("gui")
 local spacePlatformStateDefine = defines.space_platform_state
-local eventsDefine = defines.events
 local eventsLib = {}
 local spacePlatformStateDefineToIcon = {
     [spacePlatformStateDefine.waiting_for_starter_pack] = "[img=waiting-icon]",
@@ -33,6 +32,24 @@ local function initPlayer(player)
         end
     end
 end
+
+---@class PlatformEntry
+---@field leavePlanet string
+---@field arrivePlanet? string
+---@field startWaitingTick MapTick
+---@field arriveTick int
+---@field leaveTick int
+
+---@class PlayerData
+---@field selectedIndex int
+---@field guis table<string, LuaGuiElement>
+---@field reverserSortingDirection boolean
+
+---@class GlobalTable
+---@field players table<string, PlayerData>
+---@field platforms table<string, table<string, {name : string, index : int, leaveTick: int, arriveTick: int, platform: LuaSpacePlatform, entries: PlatformEntry[], migratedWhileFlying? : boolean }>>
+---@field platformsList table<string, string[]>
+---@field platformsListDisplay table<string, string[]>
 
 local function initStorage()
     storage.players = storage.players or {}
@@ -80,16 +97,17 @@ local function initStorage()
 end
 
 eventsLib.events = {
-    [eventsDefine.on_player_created] = function(event)
-        initPlayer(game.players[event.player_index])
+    ["on_player_created"] = function(eventData)
+        initPlayer(game.players[eventData.player_index])
     end,
-    [eventsDefine.on_player_removed] = function(event)
+    ["on_player_removed"] = function(eventData)
         if storage.players then
-            storage.players[tostring(event.player_index)] = nil
+            storage.players[tostring(eventData.player_index)] = nil
         end
     end,
-    [eventsDefine.on_space_platform_changed_state] = function(event)
-        local platform = event.platform
+    ---@param eventData EventData.on_space_platform_changed_state
+    ["on_space_platform_changed_state"] = function(eventData)
+        local platform = eventData.platform
         local platformForce = platform.force
         local platformState = platform.state
         local spaceLocation = platform.space_location
@@ -135,7 +153,7 @@ eventsLib.events = {
                     startWaitingTick = gameTick,
                     arriveTick = 0,
                     leaveTick = 0
-                }
+                } ---@as PlatformEntry
             end
 
             if platformData.migratedWhileFlying then
@@ -146,18 +164,18 @@ eventsLib.events = {
                     startWaitingTick = gameTick,
                     arriveTick = 0,
                     leaveTick = 0
-                }
+                } ---@as PlatformEntry
 
                 platformData.migratedWhileFlying = false
             end
         elseif platformState == spacePlatformStateDefine.paused then
-            if event.old_state ~= spacePlatformStateDefine.waiting_at_station and event.old_state ~= spacePlatformStateDefine.on_the_path then
+            if spaceLocation and eventData.old_state ~= spacePlatformStateDefine.waiting_at_station and eventData.old_state ~= spacePlatformStateDefine.on_the_path then
                 platformData.entries[#platformData.entries + 1] = {
                     leavePlanet = spaceLocation.name,
                     startWaitingTick = gameTick,
                     arriveTick = 0,
                     leaveTick = 0
-                }
+                } ---@as PlatformEntry
             end
         end
 

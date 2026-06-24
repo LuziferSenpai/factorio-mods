@@ -1,13 +1,14 @@
-local flibFormat = require("__flib__/format")
-local flibGui = require("__flib__/gui")
-local flibPosition = require("__flib__/position")
-local modGui = require("__core__/lualib/mod-gui")
+local flibFormat = require("__flib__.format")
+local flibGui = require("__flib__.gui")
+local flibPosition = require("__flib__.position")
+local modGui = require("__core__.lualib.mod-gui")
 local eventsDefine = defines.events
 local guiPosition = { x = 15, y = 58 + 15 }
 local logGui = {}
 
-local function toggleMainGui(event)
-    local globalPlayer = storage.players[tostring(event.player_index)]
+---@param eventData EventData.on_gui_click
+local function toggleMainGui(eventData)
+    local globalPlayer = storage.players[tostring(eventData.player_index)]
     local logGuiMain = globalPlayer.guis.logGuiMain
 
     if logGuiMain and logGuiMain.valid then
@@ -17,11 +18,11 @@ local function toggleMainGui(event)
             logGuiMain.visible = true
         end
     else
-        logGui.buildMainGui(globalPlayer, game.players[event.player_index])
+        logGui.buildMainGui(globalPlayer, game.players[eventData.player_index])
     end
 
-    if settings.get_player_settings(event.player_index)["captains-log-show-platform-on-toggle"].value then
-        local player = game.players[event.player_index]
+    if settings.get_player_settings(eventData.player_index)["captains-log-show-platform-on-toggle"].value then
+        local player = game.players[eventData.player_index]
         local surface = player.surface
 
         if surface and surface.platform then
@@ -39,25 +40,29 @@ local function toggleMainGui(event)
     end
 end
 
-local function changeSelectedPlatform(event)
-    local globalPlayer = storage.players[tostring(event.player_index)]
-    local playerForceIndex = tostring(game.players[event.player_index].force_index)
-    local selectedIndex = event.element.selected_index
+---@param eventData EventData.on_gui_selection_state_changed
+local function changeSelectedPlatform(eventData)
+    local globalPlayer = storage.players[tostring(eventData.player_index)]
+    local playerForceIndex = tostring(game.players[eventData.player_index].force_index)
+    local selectedIndex = eventData.element.selected_index
 
     globalPlayer.selectedIndex = selectedIndex
 
     logGui.buildLogGui(globalPlayer, storage.platforms[playerForceIndex][storage.platformsList[playerForceIndex][selectedIndex]].entries)
 end
 
-local function changeSortingDirection(event)
-    local globalPlayer = storage.players[tostring(event.player_index)]
-    local playerForceIndex = tostring(game.players[event.player_index].force_index)
+---@param eventData EventData.on_gui_click
+local function changeSortingDirection(eventData)
+    local globalPlayer = storage.players[tostring(eventData.player_index)]
+    local playerForceIndex = tostring(game.players[eventData.player_index].force_index)
 
     globalPlayer.reverserSortingDirection = not globalPlayer.reverserSortingDirection
 
     logGui.buildLogGui(globalPlayer, storage.platforms[playerForceIndex][storage.platformsList[playerForceIndex][globalPlayer.selectedIndex]].entries)
 end
 
+---@param globalPlayer PlayerData
+---@param player LuaPlayer
 function logGui.buildGuiButton(globalPlayer, player)
     local logGuiButton = globalPlayer.guis.logGuiButton
 
@@ -74,6 +79,8 @@ function logGui.buildGuiButton(globalPlayer, player)
     end
 end
 
+---@param globalPlayer PlayerData
+---@param player LuaPlayer
 function logGui.buildMainGui(globalPlayer, player)
     local logGuiMain = globalPlayer.guis.logGuiMain
 
@@ -144,10 +151,13 @@ function logGui.buildMainGui(globalPlayer, player)
     end
 end
 
+---@param globalPlayer PlayerData
+---@param platformLogEntries PlatformEntry[]
 function logGui.buildLogGui(globalPlayer, platformLogEntries)
     local logGuiLogScrollPane = globalPlayer.guis.logGuiLogScrollPane
     local reverserSortingDirection = globalPlayer.reverserSortingDirection
     local leadingZerosNeeded = math.floor(math.log10(#platformLogEntries)) + 1
+    ---@type any
     local captions = {
         "#",
         { "captains-log.journey" },

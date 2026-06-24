@@ -19,7 +19,7 @@ data:extend({
         filename = "__captains-log__/graphics/gui-button.png",
         priority = "extra-high-no-scale",
         flags = { "gui-icon" },
-        size = 256,
+        size = 252,
         scale = 0.125
     },
 })
