@@ -234,7 +234,7 @@ for i, newPipeToGround in pairs(newPipeToGrounds) do
             enabled = false,
             ingredients = {
                 { type = "item", name = "pipe-to-ground", amount = #newPipeToGround.underground },
-                { type = "item", name = "iron-plate",     amount = #newPipeToGround.normal }
+                { type = "item", name = "iron-plate", amount = #newPipeToGround.normal }
             },
             results = { { type = "item", name = name, amount = 1 } }
         }
