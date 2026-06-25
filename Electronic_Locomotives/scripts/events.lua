@@ -79,8 +79,8 @@ end
 ---@field providerLookup { [string] : boolean }
 
 local function initGlobals()
-    local locomotiveList = prototypes.item["electronic-locomotive-list"].get_entity_filters(defines.selection_mode.select)
-    local providerList = prototypes.item["electronic-provider-list"].get_entity_filters(defines.selection_mode.select)
+    local locomotiveList = prototypes.mod_data["electronic-list"].data.locomotiveList
+    local providerList = prototypes.mod_data["electronic-list"].data.providerList
     local nameFilter = {}
 
     storage.fuel = storage.fuel or {}
@@ -90,23 +90,25 @@ local function initGlobals()
     storage.locomotiveLookup = {}
     storage.providerLookup = {}
 
-    isQualityEnabled = not not script.active_mods["quality"]
+    if (script.active_mods["quality"]) then isQualityEnabled = true end
 
     setmetatable(storage.updateQuene, queneMetatable)
 
     if locomotiveList then
-        for _, locomotive in pairs(locomotiveList) do
-            storage.locomotiveLookup[locomotive.name] = flibMath.round(locomotive.get_max_energy_usage() / 16.6666666667, 0)
+        for _, locomotiveName in pairs(locomotiveList) do
+            local locomotive = prototypes.entity[locomotiveName]
 
-            table.insert(nameFilter, locomotive.name)
+            storage.locomotiveLookup[locomotiveName] = flibMath.round(locomotive.get_max_energy_usage() / 16.6666666667, 0)
+
+            table.insert(nameFilter, locomotiveName)
         end
     end
 
     if providerList then
-        for _, provider in pairs(providerList) do
-            storage.providerLookup[provider.name] = true
+        for _, providerName in pairs(providerList) do
+            storage.providerLookup[providerName] = true
 
-            table.insert(nameFilter, provider.name)
+            table.insert(nameFilter, providerName)
         end
     end
 
