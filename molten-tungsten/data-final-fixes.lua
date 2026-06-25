@@ -1,24 +1,19 @@
 local modName = "__molten-tungsten__"
 local spaceAge = "__space-age__"
-local meld = require("__core__/lualib/meld")
+local meld = require("__core__.lualib.meld")
 local recipes = data.raw.recipe
 local tungstenSteelTechnology = data.raw.technology["tungsten-steel"]
-local defaultIconSizeDefine = defines.default_icon_size
+local defaultIconSizeDefine = defines.constant.default_icon_size
 local moreCastingActive = mods["more-casting"]
+---@type boolean
 local hideRecipes = settings.startup["molten-tungsten-hide-recipes"].value
+---@type boolean
 local originalTech = settings.startup["molten-tungsten-original-tech"].value
-local itemRaws = {
-    "item",
-    "item-with-entity-data",
-    "rail-planner",
-    "repair-tool",
-    "ammo",
-    "space-platform-starter-pack",
-    "capsule",
-    "armor",
-    "tool"
-}
 
+---@alias OtherFluid { name : string, amount : data.FluidAmount }
+
+---@param base_type string
+---@param name string
 local function get_prototype(base_type, name)
     for type_name in pairs(defines.prototypes[base_type]) do
         local prototypes = data.raw[type_name]
@@ -29,13 +24,12 @@ local function get_prototype(base_type, name)
     end
 end
 
+---@param name string
 local function get_item_localised_name(name)
     local item = get_prototype("item", name)
 
     if not item then return end
-    if item.localised_name then
-        return item.localised_name
-    end
+    if item.localised_name then return item.localised_name end
 
     local prototype
     local type_name = "item"
@@ -47,8 +41,8 @@ local function get_item_localised_name(name)
         prototype = get_prototype("equipment", item.place_as_equipment_result)
         type_name = "equipment"
     elseif item.place_as_tile then
-        -- Tiles with variations don't have a localised name
         local tile_prototype = data.raw.tile[item.place_as_tile.result]
+
         if tile_prototype and tile_prototype.localised_name then
             prototype = tile_prototype
             type_name = "tile"
@@ -58,10 +52,13 @@ local function get_item_localised_name(name)
     return prototype and prototype.localised_name or { type_name .. "-name." .. name }
 end
 
--- 0.8125 for a single molten fluid = 52px at shift 19/-2
--- 0.65625 for a double molten fluid, top fluid = 42px at shift 27/-1
--- 0.59375 for a double molten fluid, lower fluid = 38px at shift 10/-1
--- base graphic is also scaled to 52px and shifted to 0/20
+---0.8125 for a single molten fluid = 52px at shift 19/-2
+---0.65625 for a double molten fluid, top fluid = 42px at shift 27/-1
+---0.59375 for a double molten fluid, lower fluid = 38px at shift 10/-1
+---base graphic is also scaled to 52px and shifted to 0/20
+---@param item data.ItemPrototype
+---@param tungstenAmount int
+---@param otherFluid OtherFluid
 local function makeCastingIcons(item, tungstenAmount, otherFluid)
     local icons = {
         {
@@ -131,6 +128,7 @@ local function makeCastingIcons(item, tungstenAmount, otherFluid)
     return icons
 end
 
+---@param ingredients data.IngredientPrototype[]
 local function ingredientsMagic(ingredients)
     local moltenTungstenIngredients = 0
     local moltenTungstenAmount = 0
@@ -178,10 +176,11 @@ local function ingredientsMagic(ingredients)
     return moltenTungstenAmount, otherFluid, ingredients
 end
 
+---@param item data.ItemPrototype
 local function createRecipe(item)
     local recipe = recipes[item.name]
 
-    if recipe then
+    if recipe and recipe.ingredients then
         if moreCastingActive and recipes["casting-" .. item.name] then
             recipe = recipes["casting-" .. item.name]
         end
@@ -194,9 +193,8 @@ local function createRecipe(item)
                     name = "casting-tungsten-" .. item.name,
                     icons = makeCastingIcons(item, moltenTungstenAmount, otherFluid),
                     localised_name = { "molten-tungsten.casting", get_item_localised_name(item.name) },
-                    category = "metallurgy",
-                    additional_categories = meld.delete(),
-                    subgroup = "casting-" .. item.subgroup,
+                    categories = meld.overwrite({"metallurgy"}),
+                    subgroup = item.subgroup and "casting-" .. item.subgroup or nil,
                     ingredients = meld.overwrite(ingredients),
                     allow_decomposition = false,
                     enabled = false,
@@ -221,9 +219,11 @@ local function createRecipe(item)
                 end
             end
 
-            table.insert(tungstenSteelTechnology.effects, {
-                type = "unlock-recipe",
-                recipe = "casting-tungsten-" .. item.name
+            meld.meld(tungstenSteelTechnology, {
+                effects = meld.append({{
+                    type = "unlock-recipe",
+                    recipe = "casting-tungsten-" .. item.name
+                }})
             })
 
             ::endOfIf::
@@ -240,8 +240,10 @@ for _, subGroup in pairs(table.deepcopy(data.raw["item-subgroup"])) do
     })
 end
 
-for _, itemRaw in pairs(itemRaws) do
-    for _, item in pairs(data.raw[itemRaw]) do
-        createRecipe(item)
+for itemType, _ in pairs(defines.prototypes.item) do
+    if (data.raw[itemType]) then
+        for _, item in pairs(data.raw[itemType]) do
+            createRecipe(item)
+        end
     end
 end

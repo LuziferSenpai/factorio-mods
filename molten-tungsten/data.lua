@@ -1,8 +1,8 @@
 local modName = "__molten-tungsten__"
-local meld = require("__core__/lualib/meld")
+local meld = require("__core__.lualib.meld")
 local tungstenPlateRecipe = data.raw.recipe["tungsten-plate"]
 local tungstenPlateItem = data.raw.item["tungsten-plate"]
-local defaultIconSizeDefine = defines.default_icon_size
+local defaultIconSizeDefine = defines.constant.default_icon_size
 
 data:extend({
     meld(table.deepcopy(data.raw.fluid["molten-iron"]), {
@@ -50,12 +50,15 @@ data:extend({
     })
 })
 
-table.insert(data.raw.technology["tungsten-steel"].effects, {
-    type = "unlock-recipe",
-    recipe = "molten-tungsten"
-})
-
-table.insert(data.raw.technology["tungsten-steel"].effects, {
-    type = "unlock-recipe",
-    recipe = "casting-tungsten"
+meld.meld(data.raw.technology["tungsten-steel"], {
+    effects = meld.append({
+        {
+            type = "unlock-recipe",
+            recipe = "molten-tungsten"
+        },
+        {
+            type = "unlock-recipe",
+            recipe = "casting-tungsten"
+        }
+    })
 })
