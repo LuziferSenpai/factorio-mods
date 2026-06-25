@@ -1,6 +1,6 @@
 # Factorio Mods Repository
 
-Welcome to my Factorio mods repository! This collection includes all the mods I have developed for the game.
+Welcome to my Factorio mods repository! This collection includes all the mods I am currently developing for Factorio.
 
 ## Contributing
 
