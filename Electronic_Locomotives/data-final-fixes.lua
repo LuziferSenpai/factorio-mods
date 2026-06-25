@@ -6,8 +6,7 @@ local locomotiveList = {}
 local providerList = {}
 
 ---@class electronic-locomotives.prototype_name_list
----@field locomotiveList string[]
----@field providerList string[]
+---@field data { locomotiveList : string[], providerList : string[] }
 
 data:extend({
     {
