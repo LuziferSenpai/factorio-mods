@@ -1,6 +1,6 @@
 {
     "name": "more-casting",
-    "version": "0.0.12",
+    "version": "0.1.0",
     "title": "More Casting",
     "author": "LuziferSenpai",
     "contact": "",
@@ -12,5 +12,5 @@
         "(?) aai-loaders-sane"
     ],
     "space_travel_required": true,
-    "factorio_version": "2.0"
+    "factorio_version": "2.1"
 }

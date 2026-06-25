@@ -1,49 +1,18 @@
 local modName = "__more-casting__"
 local spaceAge = "__space-age__"
-local meld = require("__core__/lualib/meld")
-local util = require("util")
+local meld = require("__core__.lualib.meld")
 local recipes = data.raw.recipe
 local foundryTechnology = data.raw.technology["foundry"]
-local defaultIconSizeDefine = defines.default_icon_size
+local defaultIconSizeDefine = defines.constant.default_icon_size
+---@type boolean
 local hideRecipes = settings.startup["more-casting-hide-recipes"].value
+---@type boolean
 local originalTech = settings.startup["more-casting-original-tech"].value
-local banList = {
-    ["pipe"] = true,
-    ["pipe-to-ground"] = true,
-    ["iron-plate"] = true,
-    ["copper-plate"] = true,
-    ["steel-plate"] = true,
-    ["iron-gear-wheel"] = true,
-    ["iron-stick"] = true,
-    ["low-density-structure"] = true,
-    ["concrete"] = true,
-    ["copper-cable"] = true
-}
-local castingIngredients = {
-    moltenIron = {
-        ["iron-plate"] = 10,      --10, 5
-        ["steel-plate"] = 30,     --30, 20
-        ["iron-gear-wheel"] = 30, --10, 5
-        ["iron-stick"] = 5,       --5, 2.5
-        ["pipe"] = 10             --10, 5
-    },
-    moltenCopper = {
-        ["copper-plate"] = 10, --10, 5
-        ["copper-cable"] = 2.5 --2.5, 1.25
-    }
-}
-local itemRaws = {
-    "item",
-    "item-with-entity-data",
-    "rail-planner",
-    "repair-tool",
-    "ammo",
-    "space-platform-starter-pack",
-    "capsule",
-    "armor",
-    "tool"
-}
 
+---@alias Fluids { moltenIronAmount : number, moltenCopperAmount : number }
+
+---@param base_type string
+---@param name string
 local function get_prototype(base_type, name)
     for type_name in pairs(defines.prototypes[base_type]) do
         local prototypes = data.raw[type_name]
@@ -54,13 +23,12 @@ local function get_prototype(base_type, name)
     end
 end
 
+---@param name string
 local function get_item_localised_name(name)
     local item = get_prototype("item", name)
 
     if not item then return end
-    if item.localised_name then
-        return item.localised_name
-    end
+    if item.localised_name then return item.localised_name end
 
     local prototype
     local type_name = "item"
@@ -72,8 +40,8 @@ local function get_item_localised_name(name)
         prototype = get_prototype("equipment", item.place_as_equipment_result)
         type_name = "equipment"
     elseif item.place_as_tile then
-        -- Tiles with variations don't have a localised name
         local tile_prototype = data.raw.tile[item.place_as_tile.result]
+
         if tile_prototype and tile_prototype.localised_name then
             prototype = tile_prototype
             type_name = "tile"
@@ -83,10 +51,12 @@ local function get_item_localised_name(name)
     return prototype and prototype.localised_name or { type_name .. "-name." .. name }
 end
 
--- 0.8125 for a single molten fluid = 52px at shift 19/-2
--- 0.65625 for a double molten fluid, top fluid = 42px at shift 27/-1
--- 0.59375 for a double molten fluid, lower fluid = 38px at shift 10/-1
--- base graphic is also scaled to 52px and shifted to 0/20
+---0.8125 for a single molten fluid = 52px at shift 19/-2
+---0.65625 for a double molten fluid, top fluid = 42px at shift 27/-1
+---0.59375 for a double molten fluid, lower fluid = 38px at shift 10/-1
+---base graphic is also scaled to 52px and shifted to 0/20
+---@param item data.ItemPrototype
+---@param fluids Fluids
 local function makeCastingIcons(item, fluids)
     local icons = {
         {
@@ -126,7 +96,7 @@ local function makeCastingIcons(item, fluids)
         icons[#icons + 1] = {
             icon = spaceAge .. "/graphics/icons/fluid/molten-" .. (first and "copper" or "iron") .. ".png",
             icon_size = 64,
-            scale = (0.5 * defines.default_icon_size / 64) * 0.59375,
+            scale = (0.5 * defaultIconSizeDefine / 64) * 0.59375,
             shift = { 10 / 2, -1 / 2 },
             draw_background = true
         }
@@ -134,7 +104,7 @@ local function makeCastingIcons(item, fluids)
         icons[#icons + 1] = {
             icon = spaceAge .. "/graphics/icons/fluid/molten-" .. (first and "iron" or "copper") .. ".png",
             icon_size = 64,
-            scale = (0.5 * defines.default_icon_size / 64) * 0.65625,
+            scale = (0.5 * defaultIconSizeDefine / 64) * 0.65625,
             shift = { 27 / 2, -1 / 2 },
             draw_background = true
         }
@@ -142,7 +112,7 @@ local function makeCastingIcons(item, fluids)
         icons[#icons + 1] = {
             icon = spaceAge .. "/graphics/icons/fluid/molten-iron.png",
             icon_size = 64,
-            scale = (0.5 * defines.default_icon_size / 64) * 0.8125,
+            scale = (0.5 * defaultIconSizeDefine / 64) * 0.8125,
             shift = { 19 / 2, -2 / 2 },
             draw_background = true
         }
@@ -150,7 +120,7 @@ local function makeCastingIcons(item, fluids)
         icons[#icons + 1] = {
             icon = spaceAge .. "/graphics/icons/fluid/molten-copper.png",
             icon_size = 64,
-            scale = (0.5 * defines.default_icon_size / 64) * 0.8125,
+            scale = (0.5 * defaultIconSizeDefine / 64) * 0.8125,
             shift = { 19 / 2, -2 / 2 },
             draw_background = true
         }
@@ -159,6 +129,7 @@ local function makeCastingIcons(item, fluids)
     return icons
 end
 
+---@param ingredients data.IngredientPrototype[]
 local function ingredientsMagic(ingredients)
     local moltenIronIngredients = 0
     local moltenCopperIngredients = 0
@@ -170,8 +141,8 @@ local function ingredientsMagic(ingredients)
     if ingredients and #ingredients > 0 then
         for index, ingredient in pairs(ingredients) do
             if ingredient.type == "item" then
-                local moltenIronAmountC = castingIngredients.moltenIron[ingredient.name]
-                local moltenCopperAmountC = castingIngredients.moltenCopper[ingredient.name]
+                local moltenIronAmountC = MoreCasting.castingIngredients.moltenIron[ingredient.name]
+                local moltenCopperAmountC = MoreCasting.castingIngredients.moltenCopper[ingredient.name]
 
                 if moltenIronAmountC then
                     moltenIronIngredients = moltenIronIngredients + 1
@@ -189,7 +160,7 @@ local function ingredientsMagic(ingredients)
             end
         end
 
-        if hasFluid and moltenIronAmount > 0 and moltenCopperAmount > 0 then
+        if hasFluid and (moltenIronAmount > 0 or moltenCopperAmount > 0) then
             moltenIronAmount = 0
             moltenCopperAmount = 0
         else
@@ -212,11 +183,12 @@ local function ingredientsMagic(ingredients)
     return moltenIronAmount, moltenCopperAmount, ingredients
 end
 
+---@param item data.ItemPrototype
 local function createRecipe(item)
-    if not banList[item.name] then
+    if not MoreCasting.banList[item.name] then
         local recipe = recipes[item.name]
 
-        if recipe then
+        if recipe and recipe.ingredients then
             local moltenIronAmount, moltenCopperAmount, ingredients = ingredientsMagic(table.deepcopy(recipe.ingredients))
 
             if moltenIronAmount > 0 or moltenCopperAmount > 0 then
@@ -225,9 +197,8 @@ local function createRecipe(item)
                         name = "casting-" .. item.name,
                         icons = makeCastingIcons(item, { moltenIronAmount = moltenIronAmount, moltenCopperAmount = moltenCopperAmount }),
                         localised_name = { "more-casting.casting", get_item_localised_name(item.name) },
-                        category = "metallurgy",
-                        additional_categories = meld.delete(),
-                        subgroup = "casting-" .. item.subgroup,
+                        categories = meld.overwrite({"metallurgy"}),
+                        subgroup = item.subgroup and "casting-" .. item.subgroup or nil,
                         ingredients = meld.overwrite(ingredients),
                         allow_decomposition = false,
                         enabled = false,
@@ -252,9 +223,11 @@ local function createRecipe(item)
                     end
                 end
 
-                table.insert(foundryTechnology.effects, {
-                    type = "unlock-recipe",
-                    recipe = "casting-" .. item.name
+                meld.meld(foundryTechnology, {
+                    effects = meld.append({{
+                        type = "unlock-recipe",
+                        recipe = "casting-" .. item.name
+                    }})
                 })
 
                 ::endOfIf::
@@ -272,8 +245,10 @@ for _, subGroup in pairs(table.deepcopy(data.raw["item-subgroup"])) do
     })
 end
 
-for _, itemRaw in pairs(itemRaws) do
-    for _, item in pairs(data.raw[itemRaw]) do
-        createRecipe(item)
+for itemType, _ in pairs(defines.prototypes.item) do
+    if (data.raw[itemType]) then
+        for _, item in pairs(data.raw[itemType]) do
+            createRecipe(item)
+        end
     end
 end
