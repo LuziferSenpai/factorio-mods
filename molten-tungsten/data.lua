@@ -2,6 +2,7 @@ local modName = "__molten-tungsten__"
 local meld = require("__core__.lualib.meld")
 local tungstenPlateRecipe = data.raw.recipe["tungsten-plate"]
 local tungstenPlateItem = data.raw.item["tungsten-plate"]
+local tungstenCarbideItem = data.raw.item["tungsten-carbide"]
 local defaultIconSizeDefine = defines.constant.default_icon_size
 
 data:extend({
@@ -15,7 +16,39 @@ data:extend({
     meld(table.deepcopy(tungstenPlateRecipe), {
         name = "molten-tungsten",
         order = "c[tungsten]-d[molten-tungsten]",
-        results = { { type = "fluid", name = "molten-tungsten", amount = 10 } },
+        results = { { type = "fluid", name = "molten-tungsten", amount = 10 } }
+    }),
+    meld(table.deepcopy(data.raw.recipe["tungsten-carbide"]), {
+        name = "casting-tungsten-carbide",
+        icon = meld.delete(),
+        icons = {
+            {
+                icon = modName .. "/graphics/64x64-empty.png",
+                icon_size = 64
+            },
+            {
+                icon = tungstenCarbideItem.icon,
+                icon_size = tungstenCarbideItem.icon_size,
+                scale = (0.5 * defaultIconSizeDefine / (tungstenCarbideItem.icon_size or defaultIconSizeDefine)) * 0.8125,
+                shift = { 0, 20 / 2 },
+                draw_background = true
+            },
+            {
+                icon = modName .. "/graphics/molten-tungsten.png",
+                icon_size = 64,
+                scale = (0.5 * defaultIconSizeDefine / 64) * 0.8125,
+                shift = { 19 / 2, -2 / 2 },
+                draw_background = true
+            }
+        },
+        categories = meld.overwrite({"metallurgy"}),
+        order = "c[tungsten]-d[casting-tungsten-carbide]",
+        localised_name = { "molten-tungsten.casting", { "item-name.tungsten-carbide" } },
+        ingredients = meld.overwrite({
+            { type = "item", name = "carbon", amount = 1 },
+            { type = "fluid", name = "molten-tungsten", amount = 5 },
+            { type = "fluid", name = "sulfuric-acid", amount = 10 }
+        })
     }),
     meld(table.deepcopy(tungstenPlateRecipe), {
         name = "casting-tungsten",
@@ -40,7 +73,7 @@ data:extend({
                 draw_background = true
             }
         },
-        localised_name = { "molten-tungsten.casting", {"item-name.tungsten-plate"} },
+        localised_name = { "molten-tungsten.casting", { "item-name.tungsten-plate" } },
         order = "c[tungsten]-e[casting-tungsten]",
         ingredients = meld.overwrite({
             { type = "fluid", name = "molten-tungsten", amount = 10, fluidbox_multiplier = 5 }
@@ -59,6 +92,10 @@ meld.meld(data.raw.technology["tungsten-steel"], {
         {
             type = "unlock-recipe",
             recipe = "casting-tungsten"
+        },
+        {
+            type = "unlock-recipe",
+            recipe = "casting-tungsten-carbide"
         }
     })
 })
