@@ -6,7 +6,6 @@ local trainStateDefine = defines.train_state
 local fuelValue = 10000000
 local eventsLib = {}
 local queneMetatable = { __index = quene }
-local isQualityEnabled = false
 
 ---@param force LuaForce
 ---@return string
@@ -72,6 +71,7 @@ end
 ---@field locomotiveLookup table<string, int>
 ---@field providerLookup table<string, boolean>
 ---@field fuelLookup table<string, string>
+---@field isQualityEnabled boolean
 
 local function initGlobals()
     ---@type electronic-locomotives.prototype_name_list
@@ -89,8 +89,9 @@ local function initGlobals()
     storage.locomotiveLookup = {}
     storage.providerLookup = {}
     storage.fuelLookup = {}
+    storage.isQualityEnabled = false
 
-    if script.active_mods["quality"] then isQualityEnabled = true end
+    if script.active_mods["quality"] then storage.isQualityEnabled = true end
 
     setmetatable(storage.updateQuene, queneMetatable)
 
@@ -244,6 +245,7 @@ eventsLib.events = {
 
         local gameTick = eventData.tick
         local updateQuene = storage.updateQuene[gameTick]
+        local isQualityEnabled = storage.isQualityEnabled
 
         storage.updateQuene[gameTick] = nil
 
@@ -296,7 +298,7 @@ eventsLib.events = {
 
                         nextFuelTick = gameTick + (fuelTick > 0 and fuelTick or 1)
 
-                        burner.currently_burning = isQualityEnabled and allFuels[forceIndexString] or {name = allFuels[forceIndexString], quality = locomotive.quality }
+                        burner.currently_burning = isQualityEnabled and { name = allFuels[forceIndexString], quality = locomotive.quality } or allFuels[forceIndexString]
                         burner.remaining_burning_fuel = remainingBurningFuel
                     end
                 end

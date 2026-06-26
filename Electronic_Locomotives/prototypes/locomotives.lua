@@ -149,7 +149,6 @@ for i = 1, #tiers do
         }),
         meld(table.deepcopy(locomotiveRecipe), {
             name = name,
-            enabled = true,
             ingredients = meld.overwrite(electronicData.ingredients),
             results = { { name = name } }
         })
