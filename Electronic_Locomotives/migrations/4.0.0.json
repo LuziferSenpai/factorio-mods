@@ -1,0 +1,20 @@
+{
+    "entity": [
+        ["electronic-standard-locomotive", "electronic-locomotive-1"],
+        ["electronic-cargo-locomotive", "electronic-locomotive-6"],
+        ["electronic-standard-provider", "electronic-provider-1"],
+        ["electronic-heavy-provider", "electronic-provider-4"]
+    ],
+    "item": [
+        ["electronic-standard-locomotive", "electronic-locomotive-1"],
+        ["electronic-cargo-locomotive", "electronic-locomotive-6"],
+        ["electronic-standard-provider", "electronic-provider-1"],
+        ["electronic-heavy-provider", "electronic-provider-4"]
+    ],
+    "recipe": [
+        ["electronic-standard-locomotive", "electronic-locomotive-1"],
+        ["electronic-cargo-locomotive", "electronic-locomotive-6"],
+        ["electronic-standard-provider", "electronic-provider-1"],
+        ["electronic-heavy-provider", "electronic-provider-4"]
+    ]
+}

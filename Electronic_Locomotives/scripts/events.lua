@@ -14,14 +14,8 @@ local function getFuel(force)
     local technologies = force.technologies
     local fuel = "electronic-fuel-1"
 
-    if technologies["electronic-locomotives-6"].researched then
-        fuel = "electronic-fuel-5"
-    elseif technologies["electronic-locomotives-5"].researched then
-        fuel = "electronic-fuel-4"
-    elseif technologies["electronic-locomotives-4"].researched then
-        fuel = "electronic-fuel-3"
-    elseif technologies["electronic-locomotives-3"].researched then
-        fuel = "electronic-fuel-2"
+    for techName, fuelName in pairs(storage.fuelLookup) do
+        if technologies[techName] and technologies[techName].researched then fuel = fuelName end
     end
 
     return fuel
@@ -71,16 +65,21 @@ local function onSurfaceCreated(eventData)
 end
 
 ---@class GlobalTable
----@field fuel { [string] : string }
+---@field fuel table<string, string>
 ---@field updateQuene Quene
----@field locomotives { [string] : int }
----@field providers { [string] : table<string, table<string, LuaEntity>> }
----@field locomotiveLookup { [string] : int }
----@field providerLookup { [string] : boolean }
+---@field locomotives table<string, int>
+---@field providers table<string, table<string, table<string, LuaEntity>>>
+---@field locomotiveLookup table<string, int>
+---@field providerLookup table<string, boolean>
+---@field fuelLookup table<string, string>
 
 local function initGlobals()
-    local locomotiveList = prototypes.mod_data["electronic-list"].data.locomotiveList
-    local providerList = prototypes.mod_data["electronic-list"].data.providerList
+    ---@type electronic-locomotives.prototype_name_list
+    local electronicModData = prototypes.mod_data["electronic-list"]
+    local electronicData = electronicModData.data
+    local locomotiveList = electronicData.locomotiveList
+    local providerList = electronicData.providerList
+    local fuelList = electronicData.fuelList
     local nameFilter = {}
 
     storage.fuel = storage.fuel or {}
@@ -89,8 +88,9 @@ local function initGlobals()
     storage.providers = storage.providers or {}
     storage.locomotiveLookup = {}
     storage.providerLookup = {}
+    storage.fuelLookup = {}
 
-    if (script.active_mods["quality"]) then isQualityEnabled = true end
+    if script.active_mods["quality"] then isQualityEnabled = true end
 
     setmetatable(storage.updateQuene, queneMetatable)
 
@@ -109,6 +109,12 @@ local function initGlobals()
             storage.providerLookup[providerName] = true
 
             table.insert(nameFilter, providerName)
+        end
+    end
+
+    if fuelList then
+        for fuelNumber, techNumber in pairs(fuelList) do
+            storage.fuelLookup["electronic-locomotives-" .. techNumber] = "electronic-fuel-" .. (fuelNumber + 1)
         end
     end
 
@@ -192,17 +198,9 @@ eventsLib.events = {
     end,
     ["on_research_finished"] = function(eventData)
         local research = eventData.research
-        local researchName = research.name
+        local lookedUpFuel = storage.fuelLookup[research.name]
 
-        if researchName == "electronic-locomotives-6" then
-            storage.fuel[tostring(research.force.index)] = "electronic-fuel-5"
-        elseif researchName == "electronic-locomotives-5" then
-            storage.fuel[tostring(research.force.index)] = "electronic-fuel-4"
-        elseif researchName == "electronic-locomotives-4" then
-            storage.fuel[tostring(research.force.index)] = "electronic-fuel-3"
-        elseif researchName == "electronic-locomotives-3" then
-            storage.fuel[tostring(research.force.index)] = "electronic-fuel-2"
-        end
+        if lookedUpFuel then storage.fuel[tostring(research.force.index)] = lookedUpFuel end
     end,
     ["on_train_changed_state"] = function(eventData)
         local train = eventData.train

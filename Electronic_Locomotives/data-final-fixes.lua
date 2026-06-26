@@ -6,7 +6,7 @@ local locomotiveList = {}
 local providerList = {}
 
 ---@class electronic-locomotives.prototype_name_list
----@field data { locomotiveList : string[], providerList : string[] }
+---@field data { locomotiveList : string[], providerList : string[], fuelList : int[] }
 
 data:extend({
     {
@@ -15,7 +15,8 @@ data:extend({
         data_type = "electronic-locomotives.prototype_name_list",
         data = {
             locomotiveList = locomotiveList,
-            providerList = providerList
+            providerList = providerList,
+            fuelList = { 3, 5, 7, 9 }
         }
     }
 })
