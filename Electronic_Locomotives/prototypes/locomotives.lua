@@ -98,12 +98,12 @@ local tiers = {
 local function standardElectronicIcons(color)
     return {
         {
-            icon = modName .. "/graphics/diesel-locomotive-base.png",
-            icon_size = 32
+            icon = modName .. "/graphics/locomotive-base.png",
+            icon_size = 64
         },
         {
-            icon = modName .. "/graphics/diesel-locomotive-mask.png",
-            icon_size = 32,
+            icon = modName .. "/graphics/locomotive-mask.png",
+            icon_size = 64,
             tint = util.color(color)
         },
         {

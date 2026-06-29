@@ -100,3 +100,8 @@ if mods["space-age"] then
         }
     })
 end
+
+meld.meld(data.raw.locomotive.locomotive, {
+    fast_replaceable_group = "electronic-locomotives",
+    next_upgrade = "electronic-locomotive-1",
+})

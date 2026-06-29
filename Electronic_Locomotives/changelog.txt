@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.0.2
+Date: 29.06.2026
+  Changes:
+    - The locomotive Icon is now the base on, but colored
+    - The base locomotive is now also in the upgrade group for the electronic locomotives
+---------------------------------------------------------------------------------------------------
 Version: 4.0.1
 Date: 26.06.2026
   Bugfixes:
