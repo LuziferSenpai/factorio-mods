@@ -31,7 +31,7 @@ end
 ---@param eventData EventData.on_built_entity | EventData.on_entity_cloned | EventData.on_robot_built_entity | EventData.script_raised_built | EventData.script_raised_revive | { entity: LuaEntity }
 local function onEntityCreated(eventData)
     local entity = eventData.entity or eventData.destination
-    
+
     if not (entity and entity.valid) then return end
 
     local surface = entity.surface
@@ -66,9 +66,9 @@ end
 ---@class GlobalTable
 ---@field fuel table<string, string>
 ---@field updateQuene Quene
----@field locomotives table<string, int>
+---@field locomotives table<string, number>
 ---@field providers table<string, table<string, table<string, LuaEntity>>>
----@field locomotiveLookup table<string, int>
+---@field locomotiveLookup table<string, number>
 ---@field providerLookup table<string, boolean>
 ---@field fuelLookup table<string, string>
 ---@field isQualityEnabled boolean
@@ -99,7 +99,7 @@ local function initGlobals()
         for _, locomotiveName in pairs(locomotiveList) do
             local locomotive = prototypes.entity[locomotiveName]
 
-            storage.locomotiveLookup[locomotiveName] = flibMath.round(locomotive.get_max_energy_usage() / 16.6666666667, 0)
+            storage.locomotiveLookup[locomotiveName] = locomotive.get_max_energy_usage()
 
             table.insert(nameFilter, locomotiveName)
         end
@@ -232,7 +232,7 @@ eventsLib.events = {
                 if storage.locomotives[unitNumberString] then removeFromQuene(unitNumberString) end
 
                 local burner = locomotive.burner
-                local fuelTick = math.floor(burner.remaining_burning_fuel / burner.heat_capacity)
+                local fuelTick = math.floor(burner.remaining_burning_fuel / locomotiveLookup[locomotive.name])
                 local nextFuelTick = gameTick + (fuelTick > 0 and fuelTick or 1)
 
                 storage.updateQuene:add(locomotive, nextFuelTick, unitNumberString, tostring(locomotive.surface.index), tostring(locomotive.force_index))
@@ -253,6 +253,7 @@ eventsLib.events = {
 
         local allProviders = storage.providers
         local allFuels = storage.fuel
+        local locomotiveLookup = storage.locomotiveLookup
         ---@type LuaEntity, string, string, table<string, LuaEntity>, LuaBurner, number, number
         local locomotive, surfaceIndexString, forceIndexString, providers, burner, missingFuel, newFuelAmount
         local gameTickPlusOne = gameTick + 1
@@ -294,7 +295,7 @@ eventsLib.events = {
 
                     if newFuelAmount < missingFuel then
                         local remainingBurningFuel = fuelValue - newFuelAmount
-                        local fuelTick = math.floor(remainingBurningFuel / burner.heat_capacity)
+                        local fuelTick = math.floor(remainingBurningFuel / locomotiveLookup[locomotive.name])
 
                         nextFuelTick = gameTick + (fuelTick > 0 and fuelTick or 1)
 
